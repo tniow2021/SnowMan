@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Net;
 using MySqlX.XDevAPI;
 using Org.BouncyCastle.Utilities;
 using static SqlServer.communication;
+
 
 namespace SqlServer
 {
@@ -77,6 +79,14 @@ namespace SqlServer
         {
             Console.WriteLine($"INSERT INTO {Table} VALUES({Values});");
             command.CommandText = $"INSERT INTO {Table} VALUES({Values});";
+            if (command.ExecuteNonQuery() != 1) //ExecuteNonQuery()의 반환값은 변동되는 행의 갯수임으로 INSERT문을 보낼땐 1이된다. 1이 아니거나 -1이면 오류.
+            {
+                Console.WriteLine("Failed to insert data.");
+            }
+        }
+        public void Query(string _Query)
+        {
+            command.CommandText = _Query;
             if (command.ExecuteNonQuery() != 1) //ExecuteNonQuery()의 반환값은 변동되는 행의 갯수임으로 INSERT문을 보낼땐 1이된다. 1이 아니거나 -1이면 오류.
             {
                 Console.WriteLine("Failed to insert data.");
@@ -152,19 +162,20 @@ namespace SqlServer
             string incomingMessage = "";
             public string Receive()//비연속적. 버퍼크기제한
             {
-
+                incomingMessage = "";
                 //stream.DataAvailable:버퍼에 읽을 데이터가 남아있는지 여부.
                 if (stream.DataAvailable)
                 {
                     if ((nbyte = stream.Read(receiveBuff, 0, receiveBuff.Length)) != 0)//connection 종료시 read()는 0을 반환.
                     {
                         incomingMessage = Encoding.Default.GetString(receiveBuff, 0, nbyte);//버퍼가 가득찰 경우를 상관안함.비연속적임.
-                        Console.WriteLine(incomingMessage);
+                        //Console.WriteLine(incomingMessage);
                     }
                 }
                 return incomingMessage;
             }
-            public void Close()
+          
+            public void AllClose()
             {
                 stream.Close();
                 Client.Close();
@@ -183,6 +194,10 @@ namespace SqlServer
                 IP = _IP;
                 client = new TcpClient(IP, Port);
                 stream = client.GetStream();
+            }
+            public bool Connectable()
+            {
+                return client.Connected;
             }
 
             byte[] sendBuff = new byte[1024];
@@ -203,7 +218,7 @@ namespace SqlServer
                     if ((nbyte = stream.Read(receiveBuff, 0, receiveBuff.Length)) != 0)//connection 종료시 read()는 0을 반환.
                     {
                         incomingMessage = Encoding.Default.GetString(receiveBuff, 0, nbyte);//버퍼가 가득찰 경우를 상관안함.비연속적임.
-                        Console.WriteLine(incomingMessage);
+                      
                     }
                 }
                 return incomingMessage;
@@ -222,31 +237,48 @@ namespace SqlServer
     {
         static void Main()
         {
+            GameSQL gamesql = new GameSQL("localhost", "gamedb", "Unity", "password");
+            gamesql.Connection();
             communication.Server server= new communication.Server();
             Console.WriteLine("시작하시겠습니까? y/n");
+            
             string t = Console.ReadLine();
             if (t is "y")
             {
                 server.ServerStart(7777);
+                server.ClientCherk();
+                Console.WriteLine("클라이언트와 연결되었습니다");
                 while (true)
                 {
-                    Console.Write("보낼 문자열:");
-                    server.Send(Console.ReadLine());
-                    Console.Write("받은 문자열");
-                    Console.WriteLine(server.Receive());
+                    
+                    
+                    //Console.Write("보낼 문자열:");
+                    //server.Send(Console.ReadLine());
+                    string query = server.Receive();
+                    if(query.Length > 5)//일반 데이터와 sql쿼리를 구분하기위한 임시방편
+                    {
+                        gamesql.Query(query);
+                        Console.Write("받은 문자열");
+                        Console.WriteLine(query);
+                    }
+                    Thread.Sleep(20);
+                    Console.WriteLine("대기중");
+                    
+                    
                 }
+                server.AllClose();
             }
 
         }
         static void main(string[] args)
         {
-            int temp = 2;
+            int temp = 1;
             if (temp == 1)
             {
-                GameSQL a = new GameSQL("localhost", "gamedb", "Unity", "Password");
+                GameSQL a = new GameSQL("localhost", "gamedb", "Unity", "password");
                 a.Connection();
-                //a.Insert("friend", "'gtyuio','ddddd'");
-                a.Select("abc", "*");
+                a.Insert("players", "'gtyuio','ddddd'");
+                //a.Select("abc", "*");
                 a.Close();
                 //
             }
@@ -304,32 +336,3 @@ namespace SqlServer
         }
     }
 }
-
-//    try
-//    {
-//        string strConn = "Server={0};Database=gamedb;Uid=root;Pwd=admin;";
-//        MySqlConnection conn = new MySqlConnection(strConn);
-//        conn = new MySqlConnection();
-//        conn.ConnectionString = strConn;
-//        Console.WriteLine("Connecting to MySQL...");
-//        conn.Open();
-
-//        MySqlCommand 커맨드 = new MySqlCommand();
-//        커맨드.Connection = conn;
-//        커맨드.CommandText = "INSERT INTO friend VALUES('시바루','시메루');";
-//        if (커맨드.ExecuteNonQuery() != 1)
-//            print("Failed to insert data.");
-
-//        conn.Close();
-//    }
-//    catch (MySqlException ex)
-//    {
-//        Console.WriteLine(ex.Message);
-//    }
-//    print("성공?");
-
-//}
-//public static void print(string a)
-//{
-//    Console.WriteLine(a);
-//}

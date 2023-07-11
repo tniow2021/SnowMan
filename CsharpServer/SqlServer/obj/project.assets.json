@@ -1715,11 +1715,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\SqlServer\\SqlServer.csproj",
+      "projectUniqueName": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\SqlServer\\SqlServer.csproj",
       "projectName": "SqlServer",
-      "projectPath": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\SqlServer\\SqlServer.csproj",
+      "projectPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\SqlServer\\SqlServer.csproj",
       "packagesPath": "C:\\Users\\AILAB01\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\SqlServer\\obj\\",
+      "outputPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\SqlServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\AILAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",

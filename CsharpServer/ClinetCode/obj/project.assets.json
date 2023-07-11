@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
+      "projectUniqueName": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
       "projectName": "ClinetCode",
-      "projectPath": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
+      "projectPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
       "packagesPath": "C:\\Users\\AILAB01\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\ClinetCode\\obj\\",
+      "outputPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\AILAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",

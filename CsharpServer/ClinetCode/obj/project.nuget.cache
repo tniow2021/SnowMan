@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pd6q8WTc7c6AXsyjgpuxE0WbQLvrrDcV/dV7UyY1vbnqFjhQW10A9n+xFBSEJYqbrO7b0+WyhlZVPt1sMcF9kg==",
+  "dgSpecHash": "GVAJ74J6wX8jQJ3BmV1kAjrsqC704YpqAuowmx/cFaN1beU04qTK7JEtNhiK/AruoLgEHoX5tHyDttNFBphrmA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\AILAB01\\warlord\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
+  "projectFilePath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

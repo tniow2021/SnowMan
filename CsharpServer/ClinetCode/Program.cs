@@ -68,10 +68,13 @@ namespace TcpCli
             {
                 Port = _port;
                 IP = _IP;
-                client = new TcpClient(IP, Port);
+                client = new TcpClient(IP, Port);//비동기로 연결확인해야함.
                 stream = client.GetStream();
             }
-
+            public bool Connectable()
+            {
+                return client.Connected;
+            }
             byte[] sendBuff = new byte[1024];
             public void Send(string _text)//비연속적. 버퍼크기 제한
             {
@@ -90,7 +93,6 @@ namespace TcpCli
                     if ((nbyte = stream.Read(receiveBuff, 0, receiveBuff.Length)) != 0)//connection 종료시 read()는 0을 반환.
                     {
                         incomingMessage = Encoding.Default.GetString(receiveBuff, 0, nbyte);//버퍼가 가득찰 경우를 상관안함.비연속적임.
-                        Console.WriteLine(incomingMessage);
                     }
                 }
                 return incomingMessage;
