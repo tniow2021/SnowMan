@@ -1,0 +1,15 @@
+C:\Users\AILAB01\Documents\can delete\bin\Debug\net6.0\can delete.exe
+C:\Users\AILAB01\Documents\can delete\bin\Debug\net6.0\can delete.deps.json
+C:\Users\AILAB01\Documents\can delete\bin\Debug\net6.0\can delete.runtimeconfig.json
+C:\Users\AILAB01\Documents\can delete\bin\Debug\net6.0\can delete.dll
+C:\Users\AILAB01\Documents\can delete\bin\Debug\net6.0\can delete.pdb
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.csproj.AssemblyReference.cache
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.AssemblyInfoInputs.cache
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.AssemblyInfo.cs
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.csproj.CoreCompileInputs.cache
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.dll
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\refint\can delete.dll
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.pdb
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\can delete.genruntimeconfig.cache
+C:\Users\AILAB01\Documents\can delete\obj\Debug\net6.0\ref\can delete.dll
