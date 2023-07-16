@@ -235,7 +235,7 @@ namespace SqlServer
     //https://learn.microsoft.com/en-us/dotnet/api/system.text.encoder.convert?view=net-7.0
     class Program
     {
-        static void Main()
+        static void main()
         {
             GameSQL gamesql = new GameSQL("localhost", "gamedb", "Unity", "password");
             gamesql.Connection();
@@ -270,14 +270,14 @@ namespace SqlServer
             }
 
         }
-        static void main(string[] args)
+        static void Main(string[] args)
         {
             int temp = 1;
             if (temp == 1)
             {
                 GameSQL a = new GameSQL("localhost", "gamedb", "Unity", "password");
                 a.Connection();
-                a.Insert("players", "'gtyuio','ddddd'");
+                a.Insert("friend", "'user123','qwert12345'");
                 //a.Select("abc", "*");
                 a.Close();
                 //

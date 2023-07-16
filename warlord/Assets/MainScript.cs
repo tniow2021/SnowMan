@@ -314,6 +314,7 @@ public partial class MainScript : MonoBehaviour
     }
     public bool 이동규칙(구역 기물구역, 구역 위치구역)//기물종류를 매개변수로 받아 서로 다른 이동 규칙을 설정하는 식으로 발전시키기.
     {
+        return true;
         //임시규칙:상하좌우 1칸씩만 이동가능.
         int temp1 = 기물구역.x - 위치구역.x;
         int temp2 = 기물구역.y - 위치구역.y;
