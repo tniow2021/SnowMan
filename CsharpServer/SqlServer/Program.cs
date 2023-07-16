@@ -235,7 +235,7 @@ namespace SqlServer
     //https://learn.microsoft.com/en-us/dotnet/api/system.text.encoder.convert?view=net-7.0
     class Program
     {
-        static void main()
+        static void main3()
         {
             GameSQL gamesql = new GameSQL("localhost", "gamedb", "Unity", "password");
             gamesql.Connection();
@@ -270,7 +270,7 @@ namespace SqlServer
             }
 
         }
-        static void Main(string[] args)
+        static void main2(string[] args)
         {
             int temp = 1;
             if (temp == 1)
@@ -333,6 +333,55 @@ namespace SqlServer
                 }
             }
 
+        }
+
+        static void Main()
+        {
+            Console.WriteLine("시작하시겠습니까? y/n");
+            string t = Console.ReadLine();
+            if (t is not "y") return;//y를 입력하면 종료
+            
+            TcpListener listener = new TcpListener(IPAddress.Any, 7777);
+            listener.Start();
+            Console.WriteLine("서버실행됨.");
+            TcpClient client = listener.AcceptTcpClient();
+            Console.WriteLine("클라이언트와 연결됨.");
+            NetworkStream stream = client.GetStream();
+            Console.WriteLine("스트림얻음.");
+
+            byte[] writebuff = new byte[1024];
+            byte[] readbuff = new byte[1024];
+            int nbyte;
+            char[] charbuff = new char[100];
+
+            while (true)
+            {
+                Console.WriteLine("보낼 메세지:");
+                string msg = Console.ReadLine();
+                writebuff = Encoding.Default.GetBytes(msg);
+                stream.Write(writebuff, 0, writebuff.Length);
+                Console.WriteLine("전송완료. 이하 수신된 메세지.");
+
+                //stream.DataAvailable:버퍼에 읽을 데이터가 남아있는지 여부.
+                if (stream.DataAvailable)
+                {
+                    if ((nbyte = stream.Read(readbuff, 0, readbuff.Length)) != 0)//connection 종료시 read()는 0을 반환.
+                    {
+                        string incomingMessage = Encoding.Default.GetString(readbuff, 0, nbyte);//버퍼가 가득찰 경우를 상관안함.비연속적임.
+                        Console.WriteLine("수신한 메세지:" + incomingMessage);
+                    }
+                    
+
+                    Console.WriteLine("종료하시겠습니까? y/n");
+                    string exitchar = Console.ReadLine();
+                    if (exitchar is "y") break;
+
+                    stream.Close();
+                    client.Close();
+                    listener.Stop();
+
+                }
+            }
         }
     }
 }
