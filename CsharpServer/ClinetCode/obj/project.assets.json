@@ -8,24 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\gimda\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\AILAB01\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\MY_UNITY\\unity_git\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
+      "projectUniqueName": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
       "projectName": "ClinetCode",
-      "projectPath": "D:\\MY_UNITY\\unity_git\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
-      "packagesPath": "C:\\Users\\gimda\\.nuget\\packages\\",
-      "outputPath": "D:\\MY_UNITY\\unity_git\\SnowMan\\CsharpServer\\ClinetCode\\obj\\",
+      "projectPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\ClinetCode.csproj",
+      "packagesPath": "C:\\Users\\AILAB01\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\AILAB01\\SnowMan\\CsharpServer\\ClinetCode\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\gimda\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\AILAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -66,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
