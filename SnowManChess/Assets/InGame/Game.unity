@@ -1436,7 +1436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a65f2ea7aa354478b99e7222d072e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uCE74\uBA54\uB77C\uCD5C\uB300\uD06C\uAE30": 4.89
+  "\uCE74\uBA54\uB77C\uCD5C\uB300\uD06C\uAE30": 10.91
   "\uCE74\uBA54\uB77C\uCD5C\uC18C\uD06C\uAE30": 2
   "\uC88C\uCE21\uC774\uB3D9\uD55C\uACC4": -10
   "\uC6B0\uCE21\uC774\uB3D9\uD55C\uACC4": 10
@@ -1444,9 +1444,10 @@ MonoBehaviour:
   "\uC544\uB798\uC774\uB3D9\uD55C\uACC4": -10
   movespeed: 1
   mycamera: {fileID: 519420031}
-  ZoomInMovementCoefficient: 7.87
-  ZoomInSpeed: 114.44
-  ZoomInBasicSpeed: 7.3
+  ZoomInMovementCoefficient: 3
+  ZoomInSpeed: 0.1
+  ZoomInBasicSpeed: 0
+  PlusMinusXY: 2.12
 --- !u!1 &529514915
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class MainScript : MonoBehaviour
 {
-    public static bool MobilMode=false;
+    
+    public static bool MobilMode=true;
     private void Start()
     {
         DontDestroyOnLoad(this);

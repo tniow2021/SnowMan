@@ -136,7 +136,7 @@ public partial class GameScript : MonoBehaviour//맵 및 요소 관련
         for(int x=0;x<width;x++)
             for(int y=0;y<height;y++)
             {
-                print($"{List2TileObject[x][y].GetComponent<TileScript>().coordinate}:{x},{y}");
+                //print($"{List2TileObject[x][y].GetComponent<TileScript>().coordinate}:{x},{y}");
                 
             }
     }

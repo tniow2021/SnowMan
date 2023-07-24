@@ -29,7 +29,7 @@ public partial class TileScript
     }
     private void OnMouseDown()//이것들 다 마우스 가 아니라 터치로 바꿔야함.
     {
-        print(coordinate);
+        //print(coordinate);
         
     }
     private void OnMouseDrag()
