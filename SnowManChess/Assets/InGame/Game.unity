@@ -1335,10 +1335,10 @@ MonoBehaviour:
   SoilTile: {fileID: 0}
   LavaTile: {fileID: 0}
   MapObject: {fileID: 1761702052}
-  MapTileWeight: 7
-  MapTileheight: 20
-  inputState: 
+  MapTileWeight: 9
+  MapTileheight: 9
   TouchDecisionTime: 0.7
+  cameraScript: {fileID: 519420033}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,6 +1448,7 @@ MonoBehaviour:
   ZoomInSpeed: 0.1
   ZoomInBasicSpeed: 0
   PlusMinusXY: 2.12
+  CameraMoveAble: 1
 --- !u!1 &529514915
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,32 +5,28 @@ using UnityEngine;
 
 public partial class TileScript : MonoBehaviour
 {
-    
-    //MainScript mainsc; 
-    //public int 자기위치i;
-    //public int 자기위치j;
-    //void Start()
-    //{
-    //   mainsc = GameObject.Find("MainObject").GetComponent<MainScript>();
-    //}
-    //private void OnMouseEnter()
-    //{
-    //        mainsc.위치.x = 자기위치i;
-    //        mainsc.위치.y = 자기위치j;
-    //}
-}
-public partial class TileScript
-{
     public GameScript gameScript;
-    public Vector2Int coordinate;
+    public Vector2Int coordinate=new Vector2Int(0,0);
     void OnMouseEnter()
     {
         
     }
-    private void OnMouseDown()//이것들 다 마우스 가 아니라 터치로 바꿔야함.
+    private void OnMouseDown()
     {
-        //print(coordinate);
+        if(MainScript.MobilMode==true)
+        {
+            if(Input.touchCount==1)
+            {
+                gameScript.XYSwitch(coordinate);
+            }
+        }
+        else
+        {
+            gameScript.XYSwitch(coordinate);
+        }
         
+
+
     }
     private void OnMouseDrag()
     {

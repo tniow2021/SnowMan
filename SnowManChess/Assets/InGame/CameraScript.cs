@@ -3,65 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class HelpCalculation//계산 보조 도구들 모임
-{
-    //호출할때마다의 숫자 변동값을 반환하는 친구들 모임
-    float RememberValue1;
-    float Count1 = 0;
-    public float RememberFloatDelta(float value,bool reset=false)
-    {
-        //UnityEngine.Debug.Log($"fggggggggg{value}");
 
-        if (reset == true)
-        {
-            Count1 = 0;
-            RememberValue1 = 0;
-            return 0;
-        }
-        if (Count1 == 0)
-        {
-            RememberValue1 = value;
-            Count1++;
-            return 0;//첫 반환에는 움직이지않음.
-        }
-        Count1++;
-        float delta= value - RememberValue1;
-        RememberValue1 = value;
-        return delta;
-    }
-
-    public float Vector2Distance(Vector2 A, Vector2 B)
-    {
-        float xGap = A.x - B.x;
-        float yGap = A.y - B.y;
-        xGap *= xGap;//제곱;
-        yGap *= yGap;
-        float Gap = Mathf.Sqrt(xGap + yGap);
-        return Gap;
-    }
-
-    //이 함수는 계속 값을 더하다가 
-    //그 동안의 값을 카운트값으로 나눠서 평균치를 반환한다.
-    Vector2 RememberValue2 = new Vector2(0, 0);
-    float Count2 = 0;
-    public void AccruePlusVector2(Vector2 value)//더하는 쪽
-    {
-            RememberValue2 += value;
-            Count2++;
-    }
-    public Vector2 AccruePlusVector2()//반환하는 쪽
-    {
-        if (Count2 == 0) return new Vector2(0, 0);//0으로 나눌 순 없음으로 
-        Vector2 returnValue = RememberValue2 / Count2;
-        RememberValue2=new Vector2(0,0);
-        Count2 = 0;
-        return returnValue;
-
-    }
-
-
-
-}
 public class CameraScript : MonoBehaviour
 {
 
@@ -108,8 +50,19 @@ public class CameraScript : MonoBehaviour
 
     public float PlusMinusXY;
     Vector3 프레임당_차 = new Vector3();
-    void Update()//판이 가까워질 수록 줌인속도가 빨라지는 현상을 해결해야한다.
+
+    public bool CameraMoveAble = true;
+    void Update()
     {
+        //다른 스크립트에서 CameraMoveAble를 false로 바꾸면 카메라 움직임이 멈춘다.
+        if (!CameraMoveAble)
+        {
+            calculation.AccruePlusVector2();//리셋
+            calculation.RememberFloatDelta(0, true);
+
+            return;
+        }
+
         Vector2 이동벡터 = new Vector2();
         
         float ZoomInDelta=0;
@@ -164,6 +117,12 @@ public class CameraScript : MonoBehaviour
                     프레임당_차.z = 0;
                     //관성을 위한 평균치 구하기
                     calculation.AccruePlusVector2(프레임당_차);
+                }
+                else if(touch.phase==TouchPhase.Stationary)
+                {
+                    프레임당_차.x = 0;
+                    프레임당_차.y = 0;
+                    프레임당_차.z = 0;
                 }
                
             }
