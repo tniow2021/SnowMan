@@ -30,6 +30,7 @@ public partial class GameScript : MonoBehaviour
     {
         MapSetting(MapTileWeight, MapTileheight);
 
+        //test
         PieceCreate(new Vector2Int(5, 6), TestPiece1);
     }
     void Update()
@@ -76,12 +77,12 @@ public partial class GameScript//맵 및 요소 관련
     public GameObject SoilTile;
     public GameObject LavaTile;
 
-    //타일 애니메이터 관련. (기본세팅함수에서 다 Getcomponent로 넣는다)
-    private Animator Ani_SnowTile;
-    private Animator Ani_IceTile;
-    private Animator Ani_LakeTile;
-    private Animator Ani_SoilTile;
-    private Animator Ani_LavaTile;
+    ////타일 애니메이터 관련. (기본세팅함수에서 다 Getcomponent로 넣는다)
+    //private Animator Ani_SnowTile;
+    //private Animator Ani_IceTile;
+    //private Animator Ani_LakeTile;
+    //private Animator Ani_SoilTile;
+    //private Animator Ani_LavaTile;
 
     //맵크기, 맵오브젝트 관련
     public GameObject MapObject;
@@ -90,11 +91,7 @@ public partial class GameScript//맵 및 요소 관련
 
     private void BasicSetting()
     {
-        Ani_SnowTile = SnowTile.GetComponent<Animator>();
-        Ani_IceTile = IceTile.GetComponent<Animator>();
-        Ani_LakeTile = LakeTile.GetComponent<Animator>();
-        Ani_SoilTile = SoilTile.GetComponent<Animator>();
-        Ani_LavaTile = LavaTile.GetComponent<Animator>();
+    
     }
     void MapSetting(int width, int height)
     {
@@ -171,6 +168,14 @@ public partial class GameScript //입력처리
     public  CameraScript cameraScript;
     InputStateKind inputState = InputStateKind.StandBy;
     HelpCalculation calculation= new HelpCalculation();
+    void TileTouch(Vector2Int coordinate)
+    {
+        List2TileScript[XY.x][XY.y].TileTouch();
+    }
+    void TileDrag(Vector2Int coordinate)
+    {
+        List2TileScript[XY.x][XY.y].TileDrag();
+    }
     void TouchInput()
     {
         /*
@@ -224,20 +229,17 @@ public partial class GameScript //입력처리
                     if (calculation.PlusPlusVector2(false) < 50)
                     {
                         if (timer > TouchDecisionTime)
-                        {
+                        {//드래그
                             inputState = InputStateKind.Drag;
-                            List2TileObject[XY.x][XY.y].GetComponent<SpriteRenderer>().color = Color.green;
-                            cameraScript.CameraMoveAble = false;
                         }
                     }
                     if(inputState != InputStateKind.Drag)
                     {
                         if(calculation.PlusPlusVector2(false) > 50)
                         {
-                            
+
                             //화면 이동중인 상태
                             inputState = InputStateKind.StandBy;
-                            cameraScript.CameraMoveAble = true;
                         }
                     }
                  
@@ -253,8 +255,6 @@ public partial class GameScript //입력처리
                             if (calculation.PlusPlusVector2(false) < 50)//터치
                             {
                                 inputState = InputStateKind.Touch;
-                                List2TileObject[XY.x][XY.y].GetComponent<SpriteRenderer>().color = Color.red;
-                                cameraScript.CameraMoveAble = false;
 
                                 //초기화
                                 calculation.PlusPlusVector2(true);
@@ -278,16 +278,20 @@ public partial class GameScript //입력처리
             {
                 //터치를 하는 동안에는 카메라를 멈춘다.
                 cameraScript.CameraMoveAble = false;
+
+                TileTouch(XY);
             }
             else if(inputState==InputStateKind.Drag)
             {
                 //드래그를 하는 동안에는 카메라를 멈춘다.
                 cameraScript.CameraMoveAble = false;
+
+                TileDrag(XY);
             }
             else if(inputState==InputStateKind.StandBy)
             {
                 //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
-                //cameraScript.CameraMoveAble = true;
+                cameraScript.CameraMoveAble = true;
             }
         }
         else
@@ -301,8 +305,10 @@ public partial class GameScript //입력처리
 }
 
 
-public partial class GameScript //기물, 아이템 관련.
+public partial class GameScript //기물, 
 {
+    List<GameObject> ListAllPiece = new List<GameObject>();
+
     public GameObject TestPiece1;
     public GameObject TestPiece2;
     public GameObject TestPiece3;
@@ -327,19 +333,46 @@ public partial class GameScript //기물, 아이템 관련.
         PieceScript NewPieceScript=NewPiece.GetComponent<PieceScript>();
         //게임상에서 벌어질 수 있는 상황에 따른 수많은 조건처리를 거친후에
 
-        List2TileScript[XY.x][XY.y].PutPiece(NewPiece);
-
-
-
+        if (List2TileScript[XY.x][XY.y].PutPiece(NewPiece))//기물두기에 성공한 경우
+        {
+            ListAllPiece.Add(NewPiece);
+            print("기물 설치완료");
+        }
+        else  //기물두기에 실패한 경우(이미 타일에 기물이 있음)
+        {
+            print("이미 타일에 다른 기물이 존재합니다.");
+        }
 
     }
 
-    public void PieceCreate()//배치 
+    public bool PieceMovement()//기물이동
     {
+        //7월 26일....오늘은 여기까지
+        return true;
+    }
 
+    public void AllPieceRemove()
+    {
+        foreach(GameObject obj in ListAllPiece)
+        {
+            if(obj is not null)
+            {
+                obj.GetComponent<PieceScript>().ObjectDestory();
+            }
+        }
+        ListAllPiece.Clear();
     }
 
 }
+public partial class GameScript //지형관련
+{
+    public GameObject TestGeography1;//테스트 지형
+}
+public partial class GameScript //아이템 관련.
+{
+}
+public partial class GameScript //건물관련(눈더미)
+{ }
 
 public partial class GameScript //이동처리
 {
