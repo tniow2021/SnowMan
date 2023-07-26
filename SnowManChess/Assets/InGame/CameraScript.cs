@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-
+/*
+ * 해결해야할 것: 화면이동 관성이 중간에 x또는 y움직임이 갑자기 멈추는 것, 모든 프레임픽셀차의 평균치를 구한거라 관성이 부자연수러운 것
+ */
 public class CameraScript : MonoBehaviour
 {
 
@@ -84,6 +86,7 @@ public class CameraScript : MonoBehaviour
                 //관성을 프레임당 차에 옮겨준다
                 //한번 반환된 관성자는 이후 쭉 0임으로 0은 제외해준다
                 if (관성자!=new Vector2(0,0))프레임당_차 = 관성자;
+
                 if (프레임당_차.x>0)
                 {
                     프레임당_차.x -= PlusMinusXY;
@@ -96,12 +99,13 @@ public class CameraScript : MonoBehaviour
                 }
                 if (프레임당_차.y > 0)
                 {
-                    프레임당_차.y -= PlusMinusXY;
+                    //쭉 직선으로 관성이 나아가기 위해 aspect를 곱해줌.
+                    프레임당_차.y -= PlusMinusXY * mycamera.aspect;
                     if (프레임당_차.y - PlusMinusXY < 0) 프레임당_차.y = 0;
                 }
                 else if (프레임당_차.y < 0)
                 {
-                    프레임당_차.y += PlusMinusXY;
+                    프레임당_차.y += PlusMinusXY * mycamera.aspect;
                     if (프레임당_차.y > 0) 프레임당_차.y = 0;
                 }
             }

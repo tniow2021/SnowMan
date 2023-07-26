@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public partial class GameScript : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public partial class GameScript : MonoBehaviour
     void Start()
     {
         MapSetting(MapTileWeight, MapTileheight);
+
+        PieceCreate(new Vector2Int(5, 6), TestPiece1);
     }
     void Update()
     {
@@ -35,10 +38,16 @@ public partial class GameScript : MonoBehaviour
         AllInput();
     }
 }
-public partial class GameScript : MonoBehaviour//맵 및 요소 관련
+public partial class GameScript//맵 및 요소 관련
 {
     //테스트
     public GameObject testTileObject;
+
+    //중요. 맵 제어용 리스트
+    //타일오브젝트를 2차원 리스트로 만들어 관리한다.
+    public List<List<GameObject>> List2TileObject = new List<List<GameObject>>();
+    //그 속의 타일스크립트를 2차원 리스트로 만들어 관리한다.
+    public List<List<TileScript>> List2TileScript = new List<List<TileScript>>();
 
     //타일 종류관련
     public enum TK//Tile kind
@@ -79,12 +88,6 @@ public partial class GameScript : MonoBehaviour//맵 및 요소 관련
     public int MapTileWeight;
     public int MapTileheight;
 
-    //중요. 맵 제어용 리스트
-        //타일오브젝트를 2차원 리스트로 만들어 관리한다.
-    public List<List<GameObject>> List2TileObject = new List<List<GameObject>>();
-        //그 속의 타일스크립트를 2차원 리스트로 만들어 관리한다.
-    public List<List<TileScript>> List2TileScript = new List<List<TileScript>>();
-
     private void BasicSetting()
     {
         Ani_SnowTile = SnowTile.GetComponent<Animator>();
@@ -116,7 +119,7 @@ public partial class GameScript : MonoBehaviour//맵 및 요소 관련
             List<GameObject> newList1TileObject = new List<GameObject>();
             for (int y = 0; y < height; y++)// 오브젝트 단위 할당
             {
-                GameObject newTileObject = Instantiate(testTileObject);
+                GameObject newTileObject = Instantiate(testTileObject);//중요
                 TileScript newtileScript = newTileObject.GetComponent<TileScript>();
 
                 //MapObject의 자식으로 만든다.
@@ -291,11 +294,53 @@ public partial class GameScript //입력처리
         {
 
         }
-        
-            
-       
+
+
+
     }
 }
+
+
+public partial class GameScript //기물, 아이템 관련.
+{
+    public GameObject TestPiece1;
+    public GameObject TestPiece2;
+    public GameObject TestPiece3;
+
+    PieceScript TestPiece1Script;
+    PieceScript TestPiece2Script;
+    PieceScript TestPiece3Script;
+    void PieceSetting()
+    {
+        TestPiece1Script = TestPiece1.GetComponent<PieceScript>();
+        TestPiece2Script = TestPiece2.GetComponent<PieceScript>();
+        TestPiece3Script = TestPiece3.GetComponent<PieceScript>();
+    }
+
+    //기물 생성에 성공하면 true반환 아니면 false반환
+    public void PieceCreate(Vector2Int XY, GameObject pieceObject)//나중에 public bool로 만들어야함.
+    {
+        /*
+         * 좌표와 piece를 받는다.
+         */
+        GameObject NewPiece = Instantiate(pieceObject);
+        PieceScript NewPieceScript=NewPiece.GetComponent<PieceScript>();
+        //게임상에서 벌어질 수 있는 상황에 따른 수많은 조건처리를 거친후에
+
+        List2TileScript[XY.x][XY.y].PutPiece(NewPiece);
+
+
+
+
+    }
+
+    public void PieceCreate()//배치 
+    {
+
+    }
+
+}
+
 public partial class GameScript //이동처리
 {
 
