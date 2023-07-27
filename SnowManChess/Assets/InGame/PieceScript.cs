@@ -4,6 +4,8 @@ using UnityEngine;
 
 public partial class PieceScript : MonoBehaviour //기물정의
 {
+    public Map map1;
+
     public Vector2Int Coordinate=new Vector2Int();
 
     public int AttackPower;
@@ -33,7 +35,22 @@ public partial class PieceScript : MonoBehaviour //기물정의
 }
 public partial class PieceScript
 {
-
+    private void OnMouseDown()
+    {
+        print("으갹");
+        if (MainScript.MobilMode == true)
+        {
+            if (Input.touchCount == 1)
+            {
+                
+                map1.userInput.DownPieceSwitch(this);
+            }
+        }
+        else
+        {
+            map1.userInput.DownPieceSwitch(this);
+        }
+    }
     void Update()
     {
 

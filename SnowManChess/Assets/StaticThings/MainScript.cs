@@ -7,22 +7,22 @@ using UnityEngine;
 public class MainScript : MonoBehaviour
 {
 
+    /*Static 개발자 설정(단 메인화면에서부터 시작해야 작동)
+     *줌인, 인게임 카메라 이동속도등
+     */
+    //디버그모드
     public static bool MobilMode = true;
+    //타일위의 기물들이 타일아래서 얼마만큼의 로컬위치에 있어야 자연스러운지 설정하는 곳.
+    public static Vector3 LocalPositionOfPieceOntile = new Vector3(0, 0, 0);
+
+    //개발자 설정 끝
+
+    /*Static 유저 설정(단 메인화면에서부터 시작해야 작동)
+     *소리크기, GUI비율등.
+     */
+    
     private void Start()
     {
-        /*Static 개발자 설정(단 메인화면에서부터 시작해야 작동)
-         *줌인, 인게임 카메라 이동속도등
-         */
-        //타일위의 기물들이 타일아래서 얼마만큼의 로컬위치에 있어야 자연스러운지 설정하는 곳.
-        TileScript.LocalPositionOfPieceOntile = new Vector3(0, 0, 0);
-
-        //개발자 설정 끝
-
-        /*Static 유저 설정(단 메인화면에서부터 시작해야 작동)
-         *소리크기, GUI비율등.
-         */
-
-        //유저설정끝.
         DontDestroyOnLoad(this);
     }
 }
