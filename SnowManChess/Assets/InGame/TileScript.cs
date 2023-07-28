@@ -104,19 +104,18 @@ public partial class TileScript : MonoBehaviour
 
     public Map map1;
     public Vector2Int coordinate;
-
-    public bool IsMouseOnTile = false;
     void OnMouseEnter()
     {
-        IsMouseOnTile = true;
     }
     private void OnMouseUp()
     {
-        IsMouseOnTile = false;
     }
     private void OnMouseExit()
     {
-        IsMouseOnTile = false;
+        if (Input.touchCount == 1)
+        {
+        map1.userInput.ExitTileSwitch(coordinate);
+        }
     }
     private void OnMouseDown()
     {
@@ -134,6 +133,6 @@ public partial class TileScript : MonoBehaviour
     }
     private void OnMouseDrag()
     {
-        
+   
     }
 }//터치관련

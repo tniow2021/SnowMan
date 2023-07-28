@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -147,11 +148,13 @@ public partial class Map : MonoBehaviour
     //----------------------------------------¸Þ¼Òµå-------------------------------------
     public Map(MapSet _mapSet)
     {
-        userInput 
-            = new UserInput(this);
+        _mapSet.MapObject.AddComponent<UserInput>();
+        userInput=_mapSet.MapObject.GetComponent<UserInput>();
+        userInput.map1 = this;
         MapCreate(_mapSet);
         ClassConnect();
     }
+
     void MapCreate(MapSet _mapSet)
     {
         mapSet = _mapSet;

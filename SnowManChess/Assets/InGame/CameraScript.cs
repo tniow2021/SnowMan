@@ -78,7 +78,6 @@ public class CameraScript : MonoBehaviour
             if(Input.touchCount==0)
             {
                 Vector2 관성자 = calculation.AccruePlusVector2();//평균치구하기.
-                if(관성자!=new Vector2(0,0))print(관성자);
                 //만약 화면을 움직이다가 마지막에 멈췄다면 관성도 없어야 함으로...
                 if (프레임당_차.x == 0) 관성자.x = 0;
                 if (프레임당_차.y == 0) 관성자.y = 0;

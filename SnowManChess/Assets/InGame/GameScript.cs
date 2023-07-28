@@ -64,10 +64,6 @@ public partial class GameScript : MonoBehaviour
         map1.gameScript1 = this;
         
     }
-    void Update()
-    {
-        map1.userInput.AllInput();
-    }
 }
 public partial class GameScript //사전 설정
 {
@@ -97,6 +93,12 @@ public partial class GameScript //사전 설정
     public  GameObject _RookPiece;
     public  GameObject _PawnPiece;
 
+    //입력관련
+
+    public float _TouchDecisionTime = 0.7f;
+    public static float TouchDecisionTime;
+    public CameraScript _CameraScript;
+    public static CameraScript cameraScript;
 
 
     private void Awake()
@@ -113,6 +115,8 @@ public partial class GameScript //사전 설정
         RookPiece = _RookPiece;
         PawnPiece = _PawnPiece;
 
+        cameraScript = _CameraScript;
+        TouchDecisionTime = _TouchDecisionTime;
     }
 }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class PieceScript : MonoBehaviour //기물정의
+public class PieceScript : MonoBehaviour //기물정의
 {
     public Map map1;
 
@@ -24,37 +24,12 @@ public partial class PieceScript : MonoBehaviour //기물정의
      * new Vector2Int(-1,1) //앞에서 오른쪽으로 한칸
      */
     public Animator animator;
-    void Start()
-    {
-    }
 
     public void ObjectDestory()
     {
         Destroy(this);
     }
 }
-public partial class PieceScript
-{
-    private void OnMouseDown()
-    {
-        print("으갹");
-        if (MainScript.MobilMode == true)
-        {
-            if (Input.touchCount == 1)
-            {
-                
-                map1.userInput.DownPieceSwitch(this);
-            }
-        }
-        else
-        {
-            map1.userInput.DownPieceSwitch(this);
-        }
-    }
-    void Update()
-    {
 
-    }
-}
 
 
