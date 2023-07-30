@@ -28,7 +28,7 @@ public partial class GameScript : MonoBehaviour
      * 핑(오브젝트움직임의 최소단위 구현. 한 50ms로)
      */
     public static GameScript instance;
-    Map map1;
+    Map map;
     void Start() 
     {
         instance = this.gameObject.GetComponent<GameScript>();
@@ -65,10 +65,165 @@ public partial class GameScript : MonoBehaviour
             }
         };
         Map.insatance = new Map();
+        map = Map.insatance;
         Map.insatance.MapCreate(mapSet1);
         
     }
 }
+public class MoveOrder
+{
+    public Vector2Int Piece;
+    public Vector2Int ToTile;
+}
+public enum InputMode
+{
+    Pick,
+    Put,//이동할장소를  지정
+    Route
+}
+public partial class GameScript
+{
+    public List<Vector2Int> RouteList = new List<Vector2Int>();
+
+    public InputMode inputMode = InputMode.Pick;
+    void BeFixedCamera(InputMode mode)
+    {
+        if (Input.touchCount == 2)
+        {
+            cameraScript.CameraMoveAble = true;
+        }
+        else if (Input.touchCount > 2)
+        {
+            cameraScript.CameraMoveAble = true;
+        }
+
+
+        if (mode == InputMode.Route)
+        {
+            //드래그를 하는 동안에는 카메라를 멈춘다.
+            cameraScript.CameraMoveAble = false;
+        }
+        else if (mode == InputMode.Pick)
+        {
+            //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
+            cameraScript.CameraMoveAble = true;
+
+        }
+
+    }
+    MoveOrder moveOrder = new MoveOrder();
+    private void Update()
+    {
+        Vector2Int EnterXy; 
+        int state=UserInput.instance.StateCherk(out EnterXy);
+
+
+
+        if(inputMode ==InputMode.Pick)
+        {
+            if(state==InputStateKind.Touch)
+            {
+                if(Map.insatance.mapArea[EnterXy.x][EnterXy.y].Tile.BeMouseOnTile is true)
+                {
+                    if(map.mapArea[EnterXy.x][EnterXy.y].Piece is not null)//터치한 타일에 기물이 있어야 이동
+                    {
+                        map.mapArea[EnterXy.x][EnterXy.y].Tile.TileTouch();
+                        moveOrder.Piece = EnterXy;
+                        inputMode = InputMode.Put;
+                    }
+                }
+            }
+            else if(state==InputStateKind.LongTouch)
+            {
+                if (map.mapArea[EnterXy.x][EnterXy.y].Piece is not null)
+                {
+                    inputMode = InputMode.Route;
+                }
+            }
+        }
+        else if (inputMode == InputMode.Put)
+        {
+            if (map.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
+            {
+                if (state == InputStateKind.Touch)
+                {
+                    if (moveOrder.Piece != EnterXy)//기물을 이동시킬 타일지정함
+                    {
+                        moveOrder.ToTile = EnterXy;
+                        map.PieceMove(moveOrder);
+                        map.GetMapArea(EnterXy).Tile.GetComponent<SpriteRenderer>().color = Color.blue;
+
+                        inputMode = InputMode.Pick;
+                    }
+                    else//같은 타일을 두번 터치하면
+                    {
+                        inputMode = InputMode.Pick;//다시 처음으로
+                    }
+                    
+                }
+            }
+            else//맵외곽을 터치
+            {
+
+            }
+               
+        }
+        else if (inputMode == InputMode.Route)
+        {
+            if(state==InputStateKind.Ended)
+            {
+                inputMode = InputMode.Pick;
+            }
+            map.GetMapArea(EnterXy).Tile.TileDrag();
+
+        }
+        BeFixedCamera(inputMode);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //if (state==InputStateKind.StandBy)
+        //{
+        //    inputMode = InputMode.Pick;
+        //}
+        //else if (state == InputStateKind.Touch)
+        //{
+
+        //    if (inputMode is InputMode.Pick)
+        //    {
+        //        moveOrder.Piece = EnterXy;
+        //        Map.insatance.mapArea[EnterXy.x][EnterXy.y].Tile.GetComponent<TileScript>().TileTouch();
+        //    }
+        //    else if(inputMode is InputMode.Put)
+        //    {
+        //        moveOrder.ToTile = EnterXy;
+        //        Map.insatance.PieceMove(moveOrder);
+        //    }
+        //}
+        //else if (state == InputStateKind.LongTouch)
+        //{
+        //    if (Map.insatance.mapArea[EnterXy.x][EnterXy.y].Piece is not null)
+        //    {
+        //        inputMode = InputMode.Route;
+        //    }
+        //}
+    }
+}
+
 public partial class GameScript //서버로 올라가는 길
 {
     public ClientScript clientScript; 

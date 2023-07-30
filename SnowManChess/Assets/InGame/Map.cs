@@ -89,10 +89,10 @@ public class MapSet
 
 public class MapArea //맵진행상황
 {
-    public GameObject Tile;
-    public GameObject Piece;
-    public GameObject Item;
-    public GameObject Buliding;
+    public TileScript Tile;
+    public PieceScript Piece;
+    public ItemScript Item;
+    public BuildingScript Buliding;
 }
 
 public partial class Map : MonoBehaviour
@@ -184,7 +184,7 @@ public partial class Map : MonoBehaviour
                     TileScript newtileScript = newTileObject.GetComponent<TileScript>();
                     //맵아레아에 넣는다.
                     
-                    mapArea[x][y].Tile=newTileObject;
+                    mapArea[x][y].Tile= newtileScript;
                     //MapObject의 자식으로 만든다.
                     newTileObject.transform.parent = mapSet.MapObject.transform;
                     //MapObject아래 좌표값으로 배치한다
@@ -203,7 +203,7 @@ public partial class Map : MonoBehaviour
                     {
                         GameObject newPiece = Instantiate(OriginalPiece);
                         //맵아레아에 넣는다.
-                        mapArea[x][y].Piece = newPiece;
+                        mapArea[x][y].Piece = newPiece.GetComponent<PieceScript>();
                         //MapObject의 자식으로 만든다.
                         newPiece.transform.parent = mapSet.MapObject.transform;
                         //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
@@ -242,29 +242,14 @@ public partial class Map : MonoBehaviour
             obj.GetComponent<BuildingScript>().map1 = this;
         }
     }
-    public List<List<MapArea>> GetMapArea()
+    public MapArea GetMapArea(Vector2Int XY)
     {
-        return mapArea;
+        return mapArea[XY.x][XY.y];
     }
 }
 public partial class Map//서버로 올라가는 길
 {
-    public void FromInput(Command.ThingOntile.Post post)//GameScript에서 받는다.
-    {
-        switch(post.actionKind)
-        {
-            case Command.ThingOntile.ActionKind.HardMove:
-                if(post.objectKind==Command.ThingOntile.ObjectKind.Piece)
-                {
-                    post.gameObject = mapArea[post.FromXY.x][post.FromXY.y].Piece;
 
-                    //전송
-                    GameScript.instance.FromMap(post);
-                }
-                break;
-        }
-        GameScript.instance.FromMap(post);
-    }
 }
 public partial class Map//내려가는 길
 {
@@ -298,7 +283,38 @@ public partial class Map//내려가는 길
 
 }
 public partial class Map
-{   //기물이동(좌표,좌펴)
+{   
+    public void PieceMove(MoveOrder moveOrder)//가려는 자리에 기물이 있으면 파괴후 이동.
+    {
+        Vector2Int Piece = moveOrder.Piece;
+        Vector2Int ToTile = moveOrder.ToTile;
+        if (GetMapArea(ToTile).Piece is null)//가려는 자리에 기물이 있으면
+        {
+            //움직임
+            GetMapArea(Piece).Piece.transform.localPosition
+            = new Vector3(moveOrder.ToTile.x, moveOrder.ToTile.y, 0);
+            //좌표지정
+            GetMapArea(Piece).Piece.Coordinate = moveOrder.ToTile;
+            //스크립트 교체
+            GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
+            GetMapArea(Piece).Piece = null;
+        }
+        else if(GetMapArea(ToTile).Piece is not null)//가려는 자리에 기물이 없으면
+        {
+            //움직임
+            GetMapArea(Piece).Piece.transform.localPosition
+            = new Vector3(moveOrder.ToTile.x, moveOrder.ToTile.y, 0);
+            //좌표지정
+            GetMapArea(Piece).Piece.Coordinate = moveOrder.ToTile;
+            //기존기물 파괴
+            GetMapArea(ToTile).Piece.ObjectDestory();
+            //스크립트교체
+            GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
+            GetMapArea(Piece).Piece = null;
+        }
+        
+    }
+    //기물이동(좌표,좌펴)
 
     //온난화짐행();
 

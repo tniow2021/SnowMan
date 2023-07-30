@@ -1521,6 +1521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6692772ae0533594dba1d52d35841bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RouteList: []
+  inputMode: 0
+  clientScript: {fileID: 0}
   _Testtile: {fileID: 404283663}
   _EmptyTile: {fileID: 404283663}
   _SnowTile: {fileID: 719190990}
@@ -1545,14 +1548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f888200814208994f892e3d6a6f41c10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map1: {fileID: 0}
   TouchDecisionTime: 0.7
   timer: 0
-  cameraScript: {fileID: 519420033}
-  IsTouchTile: 0
-  EnterTileXY: {x: 0, y: 0}
-  inputMode: 0
-  RouteList: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

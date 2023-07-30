@@ -63,7 +63,7 @@ public partial class TileScript //애니메이터관련
 {
     public Animator animator;
 }
-public partial class TileScript : MonoBehaviour
+public partial class TileScript
 {
     public Map map1;
     public Vector2Int coordinate;
@@ -76,19 +76,9 @@ public partial class TileScript : MonoBehaviour
             UserInput.instance.EnterTileSwitch(coordinate);
         }
     }
-    private void OnMouseUp()
-    {
-    }
+
     void OnMouseExit()
     {
         BeMouseOnTile = false;
     }
-
-    private void OnMouseDown()
-    {
-    }
-    private void OnMouseDrag()
-    {
-       
-    }
-}//터치관련
+}

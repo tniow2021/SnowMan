@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PieceScript : MonoBehaviour //기물정의
+public partial class PieceScript : MonoBehaviour //기물정의
 {
     public Map map1;
 
@@ -25,9 +25,17 @@ public class PieceScript : MonoBehaviour //기물정의
      */
     public Animator animator;
 
+
+}
+public partial class PieceScript//오브젝트관련
+{
     public void ObjectDestory()
     {
-        Destroy(this);
+        Destroy(this.gameObject);
+    }
+    public void HardMove(Vector2Int XY)
+    {
+        transform.localPosition = new Vector3(XY.x, XY.y, 0);
     }
 }
 
