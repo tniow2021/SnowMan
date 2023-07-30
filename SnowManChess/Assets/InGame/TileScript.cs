@@ -43,43 +43,7 @@ public partial class TileScript //지형정의 관련
 }
 public partial class TileScript : MonoBehaviour//기물관련
 {
-    //public GameObject Piece=null;
-    ////여기서 LocalPositionOfPieceOntile는 타일 아래 로컬위치로 나중에 적당히 조정하자
-    //public static Vector3 LocalPositionOfPieceOntile=new Vector3(0,0,0);
-    ////+ 아이템스크립트도 이후에 추가
-    //public bool PutPiece(GameObject PieceValue)
-    //{
-    //    //기물을 타일위에 올린다.
-    //    if(Piece is null)
-    //    {
-    //        Piece = PieceValue;
-    //        Piece.transform.parent = transform;
-    //        //여기서 LocalPositionOfPieceOntile는 타일 아래 로컬위치로 나중에 적당히 조정하자.
-    //        Piece.transform.localPosition = LocalPositionOfPieceOntile;
-    //        //좌표정보를 넣어준다,
-    //        Piece.GetComponent<PieceScript>().Coordinate = coordinate;
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
-    //public PieceScript TakeOffPiece()
-    //{
-    //    Piece.transform.parent = null;
-    //    PieceScript ReturnPiece = Piece.GetComponent<PieceScript>();
-    //    Piece = null;
-    //    return ReturnPiece;
-    //}
-    //public void RemovePiece()
-    //{
-    //    if(Piece is not null)
-    //    {
-    //        Piece.GetComponent<PieceScript>().ObjectDestory();
-    //    }
-    //    Piece = null;
-    //}
+
 
 }
 public partial class TileScript //외부에 호출당하는 거 관련
@@ -87,11 +51,11 @@ public partial class TileScript //외부에 호출당하는 거 관련
     float timer = 0;
     public void TileTouch()
     {
-        GetComponent<SpriteRenderer>().color = Color.red;
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
     }
     public void TileDrag()
     {
-        GetComponent<SpriteRenderer>().color = Color.green;
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
 }
 
@@ -101,38 +65,30 @@ public partial class TileScript //애니메이터관련
 }
 public partial class TileScript : MonoBehaviour
 {
-
     public Map map1;
     public Vector2Int coordinate;
+    public bool BeMouseOnTile;
     void OnMouseEnter()
     {
+        if (Input.touchCount == 1)
+        {
+            BeMouseOnTile = true;
+            map1.userInput.EnterTileSwitch(this.gameObject);
+        }
     }
     private void OnMouseUp()
     {
     }
-    private void OnMouseExit()
+    void OnMouseExit()
     {
-        if (Input.touchCount == 1)
-        {
-        map1.userInput.ExitTileSwitch(coordinate);
-        }
+        BeMouseOnTile = false;
     }
+
     private void OnMouseDown()
     {
-        if(MainScript.MobilMode==true)
-        {
-            if(Input.touchCount==1)
-            {
-                map1.userInput.DownTileSwitch(coordinate);
-            }
-        }
-        else
-        {
-            map1.userInput.DownTileSwitch(coordinate);
-        }
     }
     private void OnMouseDrag()
     {
-   
+       
     }
 }//터치관련

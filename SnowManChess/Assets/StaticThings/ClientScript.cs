@@ -42,9 +42,17 @@ public static class communication
      * 
      */
 }
-public class ClientScript : MonoBehaviour
+public partial class ClientScript : MonoBehaviour
 {
-    
+    static ClientScript instance;
+    ClientScript()
+    {
+
+    }
+    public static ClientScript GetClientScript()
+    {
+        return instance;
+    }
     public GameObject ClinetGameObject;
     public string ServerIP;//멘토님에게 보낼 빌드는 화면처음에 ip와 포트를 연결할 수 있게 만들기
     public int ServerPort;
@@ -57,6 +65,25 @@ public class ClientScript : MonoBehaviour
     }
 
     void Update()
+    {
+        //코뮤니케이션에서 받은 바이트열을 메이크바이너리로 모낸다
+    }
+}
+public partial class ClientScript//올라가는 놈
+{ 
+    public void FromGame(Command.ThingOntile.Post post)
+    {
+        print("eeeeeeeeeeeeeeeeeeeeeeeee");
+        print(post.gameObject);
+        print(post.actionKind);
+        print(post.objectKind);
+        print(post.FromXY);
+        print(post.ToXY);
+    }
+}
+public partial class ClientScript//내려가는 놈
+{
+    public void FromServer()
     {
 
     }

@@ -97,7 +97,12 @@ public class MapArea //맵진행상황
 
 public partial class Map : MonoBehaviour
 {
-    public GameScript gameScript1;
+    //----------------------------------싱글톤----------------------------
+    static Map insatance = new Map();
+    public static Map GetInstance()
+    {
+        return insatance;
+    }
 
     //맵 세트
     MapSet mapSet;
@@ -146,16 +151,8 @@ public partial class Map : MonoBehaviour
     {
     };
     //----------------------------------------메소드-------------------------------------
-    public Map(MapSet _mapSet)
-    {
-        _mapSet.MapObject.AddComponent<UserInput>();
-        userInput=_mapSet.MapObject.GetComponent<UserInput>();
-        userInput.map1 = this;
-        MapCreate(_mapSet);
-        ClassConnect();
-    }
 
-    void MapCreate(MapSet _mapSet)
+    public void MapCreate(MapSet _mapSet)
     {
         mapSet = _mapSet;
         for (int i=0;i<mapSet.X;i++)
@@ -218,6 +215,7 @@ public partial class Map : MonoBehaviour
             List2TileObject.Add(newList1TileObject);
             List2TileScript.Add(newList1TileScript);
         }
+        ClassConnect();
     }
     void ClassConnect()
     {
@@ -246,14 +244,62 @@ public partial class Map : MonoBehaviour
     {
         return mapArea;
     }
+}
+public partial class Map//서버로 올라가는 길
+{
+    public void FromInput(Command.ThingOntile.Post post)//GameScript에서 받는다.
+    {
+        switch(post.actionKind)
+        {
+            case Command.ThingOntile.ActionKind.HardMove:
+                if(post.objectKind==Command.ThingOntile.ObjectKind.Piece)
+                {
+                    post.gameObject = mapArea[post.FromXY.x][post.FromXY.y].Piece;
 
-    //기물이동(좌표,좌펴)
+                    //전송
+                    GameScript.GetInstance().FromMap(post);
+                }
+                break;
+        }
+        GameScript.GetInstance().FromMap(post);
+    }
+}
+public partial class Map//내려가는 길
+{
+    public void FromGame(Command.ThingOntile.Post post)
+    {
+        Action(post);
+    }
+    public void Action(Command.ThingOntile.Post post)
+    {
+        //삭제명령은 리스트에서 찾아서 삭제
+        //생성명령은 리스트에 추가후 타겟좌표따라 맵에 배치
+        switch (post.actionKind)
+        {
+            case Command.ThingOntile.ActionKind.None:
 
-    //온난화짐행();
+                break;
+            case Command.ThingOntile.ActionKind.Create:
+
+                break;
+            case Command.ThingOntile.ActionKind.Delete:
+
+                break;
+            case Command.ThingOntile.ActionKind.HardMove:
+
+                break;
+            case Command.ThingOntile.ActionKind.SoftMove:
+
+                break;
+        }
+    }
+
 }
 public partial class Map
-{
-    
+{   //기물이동(좌표,좌펴)
+
+    //온난화짐행();
+
 }
 
 

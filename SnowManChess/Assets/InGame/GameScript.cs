@@ -5,6 +5,12 @@ using UnityEngine.Rendering;
 
 public partial class GameScript : MonoBehaviour
 {
+    //-------------------------------싱글톤
+    static GameScript instance;
+    public static GameScript GetInstance()
+    {
+        return instance;
+    }
     /*
      * 게임시작시에만 필요한 정보
      * :체스판 크기, 타일별 정보들(지형, 자원)
@@ -29,6 +35,7 @@ public partial class GameScript : MonoBehaviour
     Map map1;
     void Start()
     {
+        clientScript = ClientScript.GetClientScript();
         GameObject MapObject1 = new GameObject();
         MapSet mapSet1 = new MapSet()
         {
@@ -60,9 +67,29 @@ public partial class GameScript : MonoBehaviour
                 {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
             }
         };
-        map1 = new Map(mapSet1);
-        map1.gameScript1 = this;
+        map1 = new Map();
+        map1.MapCreate(mapSet1);
         
+    }
+}
+public partial class GameScript //서버로 올라가는 길
+{
+    public ClientScript clientScript; 
+    public void FromMap(Command.ThingOntile.Post post)
+    {
+        //
+        if(clientScript is not null)clientScript.FromGame(post);
+    }
+}
+public partial class GameScript //Map으로 내려가는 길
+{
+    public void FromClient(Command command)
+    {
+
+    }
+    public void Action()
+    {
+
     }
 }
 public partial class GameScript //사전 설정
@@ -120,50 +147,6 @@ public partial class GameScript //사전 설정
     }
 }
 
-//public partial class GameScript //기물, 
-//{
-//    List<GameObject> ListAllPiece = new List<GameObject>();
 
 
-//    //기물 생성에 성공하면 true반환 아니면 false반환
-//    public void PieceCreate(Vector2Int XY, GameObject pieceObject)//나중에 public bool로 만들어야함.
-//    {
-//        /*
-//         * 좌표와 piece를 받는다.
-//         */
-//        GameObject NewPiece = Instantiate(pieceObject);
-//        PieceScript NewPieceScript=NewPiece.GetComponent<PieceScript>();
-//        //게임상에서 벌어질 수 있는 상황에 따른 수많은 조건처리를 거친후에
-
-//        if (List2TileScript[XY.x][XY.y].PutPiece(NewPiece))//기물두기에 성공한 경우
-//        {
-//            ListAllPiece.Add(NewPiece);
-//            print("기물 설치완료");
-//        }
-//        else  //기물두기에 실패한 경우(이미 타일에 기물이 있음)
-//        {
-//            print("이미 타일에 다른 기물이 존재합니다.");
-//        }
-
-//    }
-
-//    public bool PieceMovement()//기물이동
-//    {
-//        //7월 26일....오늘은 여기까지
-//        return true;
-//    }
-
-//    public void AllPieceRemove()
-//    {
-//        foreach(GameObject obj in ListAllPiece)
-//        {
-//            if(obj is not null)
-//            {
-//                obj.GetComponent<PieceScript>().ObjectDestory();
-//            }
-//        }
-//        ListAllPiece.Clear();
-//    }
-
-//}
 

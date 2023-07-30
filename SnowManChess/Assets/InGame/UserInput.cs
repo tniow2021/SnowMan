@@ -2,64 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class UserInput : MonoBehaviour//입력처리
 {
-    public Map map1;
+    //--------------------------------------싱글톤-----------------------------
+    static UserInput Instance = new UserInput();
+    public static UserInput GetInstance()
+    {
+        return Instance;
+    }
 
     public float TouchDecisionTime = GameScript.TouchDecisionTime;
     public float timer = 0;
     public CameraScript cameraScript = GameScript.cameraScript;
     //---------------------------Switch 함수(하위 클래스에서 호출당하는 함수)--------------------------
-    public Vector2Int downTileXY;
-    bool TileSwitchChange = true;
     public bool IsTouchTile = false;
-    public void DownTileSwitch(Vector2Int _tileXY)
+    public Vector2Int EnterTileXY;
+    GameObject tileObj;
+    public void EnterTileSwitch(GameObject _tileObj)
     {
-        print(_tileXY);
-        if (_tileXY != downTileXY) TileSwitchChange = true;
-        else TileSwitchChange = false;
-        downTileXY = _tileXY;
-        IsTouchTile = true;
-
-
-
-    }
-    public void DragTileSwitch()
-    {
-        IsTouchTile = true;
-    }
-
-    Vector2Int EnterTileXY;
-    public void EnterTileSwitch(Vector2Int _tileXY)
-    {
-        if (_tileXY != EnterTileXY) EnterTileXY = _tileXY;
-    }
-    public void ExitTileSwitch(Vector2Int _tileXY)
-    {
-        //이미저장된 타일좌표와 마우스가 나간 타일좌표가 같다라는건 타일맵밖을 터치했다는 것,
-        if (Vector2Int.Equals(_tileXY, downTileXY))
+        if (_tileObj != tileObj)
         {
-            IsTouchTile = false;
+            tileObj = _tileObj;
+            EnterTileXY = _tileObj.GetComponent<TileScript>().coordinate;
         }
+        print(EnterTileXY);
     }
 
-    //타일루트는 입력상태가 터치또는 스탠바이상태가 되었을때 싹 지운다.
-    public List<Vector2Int> TileRoute = new List<Vector2Int>();
-    public void RouteTileSwitch(Vector2Int TileXY)
-    {
-        //중복되지않은 타일좌표경로만 루트리스트에 더한다.
-        if (!Vector2Int.Equals(TileRoute[TileRoute.Count], TileXY))
-        {
-            TileRoute.Add(TileXY);
-        }
-    }
-
-    public PieceScript pieceScript;
-    public void DownPieceSwitch(PieceScript _pieceScript)
-    {
-        print(_pieceScript.gameObject);
-        pieceScript = _pieceScript;
-    }
     //--------------------------------------일반함수-----------------------------------
 
     public enum InputMode
@@ -75,49 +44,100 @@ public class UserInput : MonoBehaviour//입력처리
         Drag
     }
     public InputMode inputMode = InputMode.Pick;
+    public List<Vector2Int> RouteList = new List<Vector2Int>();
+
+
+    Command.ThingOntile.Post post = new Command.ThingOntile.Post();
     private void Update()
     {
         InputStateKind InputState2 = TouchInput();
-        if (InputState2 == InputStateKind.Touch)
-        {
-            //터치를 하는 동안에는 카메라를 멈춘다.
-            cameraScript.CameraMoveAble = false;
-            TileRoute.Clear();
-            TileRoute.Add(downTileXY);
-        }
-        else if (InputState2 == InputStateKind.Drag)
-        {
-            //드래그를 하는 동안에는 카메라를 멈춘다.
-            cameraScript.CameraMoveAble = false;
-        }
-        else if (InputState2 == InputStateKind.StandBy)
-        {
-            //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
-            cameraScript.CameraMoveAble = true;
-            TileRoute.Clear();
+        BeFixedCamera(InputState2);
 
-        }
 
         if (inputMode == InputMode.Pick)
         {
             if (InputState2 == InputStateKind.Touch)
             {
-                if (IsTouchTile is true)
+                
+                if (Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].BeMouseOnTile is true)//마우스가 해당타일 위에 있을때만.
                 {
-                    map1.List2TileScript[downTileXY.x][downTileXY.y].TileTouch();
+                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileTouch();
                 }
+                
+
             }
             else if (InputState2 == InputStateKind.Drag)
             {
-                inputMode = InputMode.Route;//루트모드진입 
+               
+                if (Map.GetInstance().mapArea[EnterTileXY.x][EnterTileXY.y].Piece is not null)//터치한 타일에 기물이 있어야 루트모드로 진입한다
+                {
+                    post.FromXY = EnterTileXY;
+
+                    inputMode = InputMode.Route;//루트모드진입 
+                }
+                
+            }
+            else if(InputState2==InputStateKind.StandBy)
+            {
             }
         }
         else if(inputMode== InputMode.Route)
         {
             if (InputState2 == InputStateKind.Drag)
             {
-                map1.List2TileScript[EnterTileXY.x][EnterTileXY.y].TileDrag();
+
+
+                if (RouteList.Count == 0)
+                {
+
+                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileDrag();
+                    
+                    //명령
+                    post.actionKind = Command.ThingOntile.ActionKind.HardMove;
+                    post.ToXY = EnterTileXY;
+                    post.objectKind = Command.ThingOntile.ObjectKind.Piece;
+
+                    //명령전송
+                    Map.GetInstance().FromInput(post);
+
+
+                    RouteList.Add(EnterTileXY);
+                }
+                else if (Vector2Int.Equals(RouteList[RouteList.Count - 1], EnterTileXY) is false)
+                {
+
+                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileDrag();
+                    
+                    RouteList.Add(EnterTileXY);
+                }
+
             }
+            else if(InputState2==InputStateKind.StandBy|| InputState2==InputStateKind.Touch)
+            {
+                RouteList.Clear();
+                inputMode = InputMode.Pick;
+            }
+        }
+    }
+    void BeFixedCamera(InputStateKind state)
+    {
+        if (state == InputStateKind.Touch)
+        {
+
+            //터치를 하는 동안에는 카메라를 멈춘다.
+            cameraScript.CameraMoveAble = false;
+
+        }
+        else if (state == InputStateKind.Drag)
+        {
+            //드래그를 하는 동안에는 카메라를 멈춘다.
+            cameraScript.CameraMoveAble = false;
+        }
+        else if (state == InputStateKind.StandBy)
+        {
+            //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
+            cameraScript.CameraMoveAble = true;
+
         }
     }
     HelpCalculation calculation = new HelpCalculation();

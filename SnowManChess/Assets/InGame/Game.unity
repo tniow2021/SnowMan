@@ -1038,6 +1038,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
+  BeMouseOnTile: 0
 --- !u!95 &353426464
 Animator:
   serializedVersion: 5
@@ -1448,6 +1449,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
+  BeMouseOnTile: 0
 --- !u!61 &404283668
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1547,11 +1549,10 @@ MonoBehaviour:
   TouchDecisionTime: 0.7
   timer: 0
   cameraScript: {fileID: 519420033}
-  downTileXY: {x: 0, y: 0}
   IsTouchTile: 0
-  TileRoute: []
-  pieceScript: {fileID: 0}
+  EnterTileXY: {x: 0, y: 0}
   inputMode: 0
+  RouteList: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,6 +1899,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
+  BeMouseOnTile: 0
 --- !u!95 &719190993
 Animator:
   serializedVersion: 5
