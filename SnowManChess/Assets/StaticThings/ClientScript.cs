@@ -26,7 +26,43 @@ using System.Net.Sockets;
  * 
  * 
  */
-public static class communication
+public partial class ClientScript : MonoBehaviour
+{
+    public static ClientScript instance;
+    public static ClientScript GetClientScript()
+    {
+        return instance;
+    }
+    public GameObject ClinetGameObject;
+    public string ServerIP;//멘토님에게 보낼 빌드는 화면처음에 ip와 포트를 연결할 수 있게 만들기
+    public int ServerPort;
+
+    public string PresentScene;
+    // Start is called before the first frame update
+    private void Awake()
+    {
+        instance = this;
+    }
+    void Start()
+    {
+        DontDestroyOnLoad(ClinetGameObject);
+        Connect(ServerIP, ServerPort);
+
+
+
+        //테스트
+        PieceCreate order = new PieceCreate();
+        order.pieceKind = PK.King;
+        order.XY = new Vector2Int(5, 7);
+        SendToServer(order);
+    }
+
+    void Update()
+    {
+
+    }
+}
+public partial class ClientScript
 {
     /*
      * 순서 제 3번째
@@ -41,81 +77,87 @@ public static class communication
      * 일정시간 간격으로 연결을 시도해보다 안되면 멀티플레이 씬에서 나가고 메세지를 띄운다. 
      * 
      */
+
+    TcpClient client;
+    NetworkStream stream;
+    void Connect(string IP,int port)
+    {
+        client = new TcpClient(IP, port);
+        stream = client.GetStream();
+    }
+    public void Send(List<byte> dataSet)
+    {
+        if(client.Connected is true)//연결이 되었을때
+        {
+            byte[] binary = dataSet.ToArray();
+            stream.Write(binary);
+        }
+        else//연결이 안되있을때 
+        {
+
+        }
+    }
+    int nbyte;
+    byte[] readBuff = new byte[1024];
+    public void Receive()
+    {
+        if (client.Connected is true)
+        {
+            if (stream.DataAvailable) if ((nbyte = stream.Read(readBuff, 0, readBuff.Length)) != 0)//connection 종료시 read()는 0을 반환.
+            {
+                
+            }
+        }
+    }
 }
-public partial class ClientScript : MonoBehaviour
+public partial class ClientScript
 {
-    static ClientScript instance;
-    ClientScript()
+    void Decoding(List<byte> dataSet)
     {
-
+        //구분자로 나눠진 하나의 데이터셋을 받는다.
     }
-    public static ClientScript GetClientScript()
+    void MakeDataSet(List<byte> data)
     {
-        return instance;
-    }
-    public GameObject ClinetGameObject;
-    public string ServerIP;//멘토님에게 보낼 빌드는 화면처음에 ip와 포트를 연결할 수 있게 만들기
-    public int ServerPort;
+        //첫번째에는 구분자
+        //두번째에는 길이
+        //세번째에는 데이터
 
-    public string PresentScene;
-    // Start is called before the first frame update
-    void Start()
-    {
-        DontDestroyOnLoad(ClinetGameObject);
-    }
-
-    void Update()
-    {
-        //코뮤니케이션에서 받은 바이트열을 메이크바이너리로 모낸다
+        List<byte> dataSet = new List<byte>();
+        dataSet.Add(255);//구분자
+        dataSet.Add(((byte)data.Count));
+        dataSet.AddRange(data);
+        Send(dataSet);
     }
 }
 public partial class ClientScript//올라가는 놈
-{ 
-    public void FromGame(Command.ThingOntile.Post post)
+{
+    public void SendToServer(PieceCreate order)
     {
-        print("eeeeeeeeeeeeeeeeeeeeeeeee");
-        print(post.gameObject);
-        print(post.actionKind);
-        print(post.objectKind);
-        print(post.FromXY);
-        print(post.ToXY);
+        List<byte> data = new List<byte>();
+        data.Add(((byte)Command.Kind.PieceCreate));
+        data.Add(((byte)order.pieceKind));
+        data.Add(((byte)order.XY.x));
+        data.Add(((byte)order.XY.y));
+        MakeDataSet(data);
     }
+    public void SendToServer()
+    {
+
+    }
+  
 }
 public partial class ClientScript//내려가는 놈
 {
-    public void FromServer()
+    public void FromServer(MoveOrder moveOrder)
     {
 
     }
 }
-public static class MakeBinary
-{
-    /*
-     * 순서 제 2번째
-     * MakeDetaSet에서 넘겨받은 DataSet 인스턴스를 
-     * 해체해서 하나의 바이트열로 만든다. 만들어진 바이트 열은 
-     * communication 클래스로 보낸다.
-     * 
-     * 이 클래스에서 바이너리 데이터의 구조를 정의한다
-     * 
-     */
-}
-public class DataSet
-{
-    /*
-     * 데이터셋을 여기에 정의한다.
-     */
-}
-public static class MakeDetaSet
-{
-    static DataSet dataSet = new DataSet();
-    /*
-     * 순서 제 1번째
-     * 게임스크립트에서 이 정적클래스에 접근해서 이안에 있는 변수들을 채우고
-     * 변수를 다 채웠으면 특정 함수를 실행시켜 만들어진 DataSet 인스턴스을 MakeBinary에 보낸다.
-     * 
-     */
-}
+
+
+
+
+
 
 
 

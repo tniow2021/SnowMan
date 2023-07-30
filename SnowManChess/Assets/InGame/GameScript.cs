@@ -32,7 +32,6 @@ public partial class GameScript : MonoBehaviour
     void Start() 
     {
         instance = this.gameObject.GetComponent<GameScript>();
-        clientScript = ClientScript.GetClientScript();
         GameObject MapObject1 = new GameObject();
         MapSet mapSet1 = new MapSet()
         {
@@ -74,6 +73,11 @@ public class MoveOrder
 {
     public Vector2Int Piece;
     public Vector2Int ToTile;
+}
+public class PieceCreate
+{
+    public PK pieceKind;
+    public Vector2Int XY;
 }
 public enum InputMode
 {
@@ -180,69 +184,16 @@ public partial class GameScript
         BeFixedCamera(inputMode);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //if (state==InputStateKind.StandBy)
-        //{
-        //    inputMode = InputMode.Pick;
-        //}
-        //else if (state == InputStateKind.Touch)
-        //{
-
-        //    if (inputMode is InputMode.Pick)
-        //    {
-        //        moveOrder.Piece = EnterXy;
-        //        Map.insatance.mapArea[EnterXy.x][EnterXy.y].Tile.GetComponent<TileScript>().TileTouch();
-        //    }
-        //    else if(inputMode is InputMode.Put)
-        //    {
-        //        moveOrder.ToTile = EnterXy;
-        //        Map.insatance.PieceMove(moveOrder);
-        //    }
-        //}
-        //else if (state == InputStateKind.LongTouch)
-        //{
-        //    if (Map.insatance.mapArea[EnterXy.x][EnterXy.y].Piece is not null)
-        //    {
-        //        inputMode = InputMode.Route;
-        //    }
-        //}
     }
 }
 
 public partial class GameScript //서버로 올라가는 길
 {
-    public ClientScript clientScript; 
-    public void FromMap(Command.ThingOntile.Post post)
-    {
-        //
-        if(clientScript is not null)clientScript.FromGame(post);
-    }
+
 }
 public partial class GameScript //Map으로 내려가는 길
 {
-    public void FromClient(Command command)
-    {
-
-    }
-    public void Action()
-    {
-
-    }
+ 
 }
 public partial class GameScript //사전 설정
 {

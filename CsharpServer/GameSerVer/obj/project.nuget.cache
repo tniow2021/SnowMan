@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7yWSv65RBg5nUkzgL0JfEcGs8NozhVn/edqlfcVXmW3lez2zWY0CJ1emAf4aTk33JvDBecCtFvPNyE5DRpv7hA==",
+  "dgSpecHash": "hZEdEL3kzuwxNbJ4rAnG9nO6/dbPXJGF1JYiHeHNmhXQA9qIn9/V2yhGCM+SB6MgC1AIMVVwfUFkf5doV2E/sA==",
   "success": true,
-  "projectFilePath": "D:\\MY_UNITY\\unity_git\\SnowMan\\CsharpServer\\GameSerVer\\GameSerVer.csproj",
+  "projectFilePath": "D:\\MY_UNITY\\unity_git\\SnowMan\\CsharpServer\\GameServer\\GameServer.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

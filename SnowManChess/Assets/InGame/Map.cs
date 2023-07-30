@@ -53,29 +53,7 @@ using UnityEngine;
  * 서버로직:
  * 
  */
-public enum TK//Tile kind
-{
-    none,
-    test,
-    Snow,
-    Lake
-}
-public enum PK
-{
-    none,
-    King,
-    Queen,
-    Bishop,
-    Knight,
-    Rook,
-    Pawn
-}
-public enum IK
-{
-}
-public enum BK
-{ 
-}
+
 public class MapSet
 {
     public int X;
@@ -253,33 +231,8 @@ public partial class Map//서버로 올라가는 길
 }
 public partial class Map//내려가는 길
 {
-    public void FromGame(Command.ThingOntile.Post post)
-    {
-        Action(post);
-    }
-    public void Action(Command.ThingOntile.Post post)
-    {
-        //삭제명령은 리스트에서 찾아서 삭제
-        //생성명령은 리스트에 추가후 타겟좌표따라 맵에 배치
-        switch (post.actionKind)
-        {
-            case Command.ThingOntile.ActionKind.None:
 
-                break;
-            case Command.ThingOntile.ActionKind.Create:
 
-                break;
-            case Command.ThingOntile.ActionKind.Delete:
-
-                break;
-            case Command.ThingOntile.ActionKind.HardMove:
-
-                break;
-            case Command.ThingOntile.ActionKind.SoftMove:
-
-                break;
-        }
-    }
 
 }
 public partial class Map

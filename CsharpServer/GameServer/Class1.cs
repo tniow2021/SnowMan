@@ -1,6 +1,7 @@
+﻿using System;
+
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public partial class Command
 {
@@ -19,7 +20,7 @@ public partial class Command
         CreateBuliding,
         DeleteBulifing,
 
-        Hot//�³�ȭ
+        Hot//온난화
     }
     public Kind kind;
     public class ToSer
@@ -38,8 +39,7 @@ public partial class Command
         }
         public class PieceCreate
         {
-            public PK pieceKind_1;
-            public Vector2Int XY_2;
+   
         }
         public class PieceDelete
         {
@@ -83,10 +83,6 @@ public partial class Command
         }
         public class PieceCreate
         {
-            public byte pieceKind;
-            public byte x;
-            public byte y;
-            public byte ID;
         }
         public class PieceDelete
         {
@@ -114,7 +110,7 @@ public partial class Command
         }
     }
 }
-    
+
 public partial class Command
 {
 

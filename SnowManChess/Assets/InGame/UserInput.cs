@@ -4,13 +4,6 @@ using UnityEngine;
 
 
 
-public static class InputStateKind
-{
-    public const int StandBy = 5;
-    public const int Touch = 1;
-    public const int LongTouch = 2;
-    public const int Ended = 3;
-}
 
 public partial class UserInput : MonoBehaviour//입력처리
 {

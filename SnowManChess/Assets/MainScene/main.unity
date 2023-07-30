@@ -2489,8 +2489,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClinetGameObject: {fileID: 1906205795}
-  ServerIP: 
-  ServerPort: 0
+  ServerIP: 127.0.0.1
+  ServerPort: 7777
   PresentScene: 
 --- !u!4 &1906205797
 Transform:
