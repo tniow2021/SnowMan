@@ -74,11 +74,7 @@ public class MoveOrder
     public Vector2Int Piece;
     public Vector2Int ToTile;
 }
-public class PieceCreate
-{
-    public PK pieceKind;
-    public Vector2Int XY;
-}
+
 public enum InputMode
 {
     Pick,

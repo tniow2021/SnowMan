@@ -38,8 +38,9 @@ public partial class Command
         }
         public class PieceCreate
         {
-            public PK pieceKind_1;
-            public Vector2Int XY_2;
+            public PK pieceKind1;
+            public int X2;
+            public int y3;
         }
         public class PieceDelete
         {

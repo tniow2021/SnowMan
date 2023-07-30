@@ -39,10 +39,15 @@ namespace GameServer
                         Console.WriteLine(readBuff[5]);
                         Console.WriteLine(readBuff[6]);
                 }
+                
                 Console.WriteLine("종료하시겠습니까? y/n");
                 string exitchar = Console.ReadLine();
                 if (exitchar is "y") break;
             }
+            byte[] writeBuff= new byte[]{ 3,5,7,255};
+            stream.Write(writeBuff);
+            Console.WriteLine("종료하시겠습니까? y/n");
+            string exitchaer = Console.ReadLine();
             Console.WriteLine("연결은 됨..!");
         }
     }
