@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Command
 {
-    UserInput userInput;
     Map map;
     public enum CommandKind
     {

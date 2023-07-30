@@ -1,31 +1,127 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-public class UserInput : MonoBehaviour//입력처리
+public class MoveOrder
 {
-    //--------------------------------------싱글톤-----------------------------
-    static UserInput Instance = new UserInput();
-    public static UserInput GetInstance()
+    public Vector2Int Piece;
+    public Vector2Int ToTile;
+}
+public partial class UserInput
+{
+    enum PieceChoiseMode
     {
-        return Instance;
+        pickAble,
+        PutAble
     }
+    PieceChoiseMode PieceMode = PieceChoiseMode.pickAble;
+    MoveOrder moveOrder = new MoveOrder();
+    public InputMode inputMode = InputMode.Pick;
+    private void Update()
+    {
+        InputStateKind InputState2 = TouchInput();
+        BeFixedCamera(InputState2);
 
-    public float TouchDecisionTime = GameScript.TouchDecisionTime;
-    public float timer = 0;
-    public CameraScript cameraScript = GameScript.cameraScript;
+        if (inputMode == InputMode.Pick)
+        {
+            if (InputState2 == InputStateKind.Touch)
+            {
+                if (Map.insatance.List2TileScript[EnterTileXY.x][EnterTileXY.y].BeMouseOnTile is true)//마우스가 해당타일 위에 있을때만.
+                {
+                    if (PieceMode is PieceChoiseMode.pickAble)
+                    {
+                        //시각표시
+                        Map.insatance.List2TileScript[EnterTileXY.x][EnterTileXY.y].TileTouch();
+
+                        moveOrder.Piece = EnterTileXY;
+                        PieceMode = PieceChoiseMode.PutAble;
+                    }
+                    else if (PieceMode is PieceChoiseMode.PutAble)
+                    {
+                        if (!Vector2Int.Equals(moveOrder.Piece, EnterTileXY))
+                        {
+                            moveOrder.ToTile = EnterTileXY;
+                            PieceMode = PieceChoiseMode.pickAble;
+
+                            print($"qqqq{moveOrder.Piece},,{moveOrder.ToTile}");
+                        }
+
+                    }
+                }
+
+
+            }
+            else if (InputState2 == InputStateKind.Drag)
+            {
+
+                if (Map.insatance.mapArea[EnterTileXY.x][EnterTileXY.y].Piece is not null)//터치한 타일에 기물이 있어야 루트모드로 진입한다
+                {
+                    post.FromXY = EnterTileXY;
+
+                    inputMode = InputMode.Route;//루트모드진입 
+                }
+
+            }
+            else if (InputState2 == InputStateKind.StandBy)
+            {
+            }
+        }
+        else if (inputMode == InputMode.Route)
+        {
+            if (InputState2 == InputStateKind.Drag)
+            {
+
+
+                if (RouteList.Count == 0)
+                {
+
+                    Map.insatance.GetTile(EnterTileXY).TileDrag();
+
+                    //명령
+                    post.actionKind = Command.ThingOntile.ActionKind.HardMove;
+                    post.ToXY = EnterTileXY;
+                    post.objectKind = Command.ThingOntile.ObjectKind.Piece;
+
+                    //명령전송
+                    Map.insatance.FromInput(post);
+
+
+                    RouteList.Add(EnterTileXY);
+                }
+                else if (Vector2Int.Equals(RouteList[RouteList.Count - 1], EnterTileXY) is false)
+                {
+
+                    Map.insatance.GetTile(EnterTileXY).TileDrag();
+
+                    RouteList.Add(EnterTileXY);
+                }
+
+            }
+            else if (InputState2 == InputStateKind.StandBy || InputState2 == InputStateKind.Touch)
+            {
+                RouteList.Clear();
+                inputMode = InputMode.Pick;
+            }
+        }
+    }
+}
+
+public partial class UserInput : MonoBehaviour//입력처리
+{
+
+    //-----------------------------------------------------------------------------
+    public static UserInput instance;
+
+
     //---------------------------Switch 함수(하위 클래스에서 호출당하는 함수)--------------------------
     public bool IsTouchTile = false;
-    public Vector2Int EnterTileXY;
-    GameObject tileObj;
-    public void EnterTileSwitch(GameObject _tileObj)
+     Vector2Int EnterTileXY=new Vector2Int();
+    public void EnterTileSwitch(Vector2Int _EnterTileXY)
     {
-        if (_tileObj != tileObj)
+        if (_EnterTileXY != EnterTileXY)
         {
-            tileObj = _tileObj;
-            EnterTileXY = _tileObj.GetComponent<TileScript>().coordinate;
+            EnterTileXY = _EnterTileXY;
         }
+      
         print(EnterTileXY);
     }
 
@@ -43,82 +139,12 @@ public class UserInput : MonoBehaviour//입력처리
         Touch,
         Drag
     }
-    public InputMode inputMode = InputMode.Pick;
     public List<Vector2Int> RouteList = new List<Vector2Int>();
 
 
     Command.ThingOntile.Post post = new Command.ThingOntile.Post();
-    private void Update()
-    {
-        InputStateKind InputState2 = TouchInput();
-        BeFixedCamera(InputState2);
+    
 
-
-        if (inputMode == InputMode.Pick)
-        {
-            if (InputState2 == InputStateKind.Touch)
-            {
-                
-                if (Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].BeMouseOnTile is true)//마우스가 해당타일 위에 있을때만.
-                {
-                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileTouch();
-                }
-                
-
-            }
-            else if (InputState2 == InputStateKind.Drag)
-            {
-               
-                if (Map.GetInstance().mapArea[EnterTileXY.x][EnterTileXY.y].Piece is not null)//터치한 타일에 기물이 있어야 루트모드로 진입한다
-                {
-                    post.FromXY = EnterTileXY;
-
-                    inputMode = InputMode.Route;//루트모드진입 
-                }
-                
-            }
-            else if(InputState2==InputStateKind.StandBy)
-            {
-            }
-        }
-        else if(inputMode== InputMode.Route)
-        {
-            if (InputState2 == InputStateKind.Drag)
-            {
-
-
-                if (RouteList.Count == 0)
-                {
-
-                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileDrag();
-                    
-                    //명령
-                    post.actionKind = Command.ThingOntile.ActionKind.HardMove;
-                    post.ToXY = EnterTileXY;
-                    post.objectKind = Command.ThingOntile.ObjectKind.Piece;
-
-                    //명령전송
-                    Map.GetInstance().FromInput(post);
-
-
-                    RouteList.Add(EnterTileXY);
-                }
-                else if (Vector2Int.Equals(RouteList[RouteList.Count - 1], EnterTileXY) is false)
-                {
-
-                    Map.GetInstance().List2TileScript[EnterTileXY.x][EnterTileXY.y].TileDrag();
-                    
-                    RouteList.Add(EnterTileXY);
-                }
-
-            }
-            else if(InputState2==InputStateKind.StandBy|| InputState2==InputStateKind.Touch)
-            {
-                RouteList.Clear();
-                inputMode = InputMode.Pick;
-            }
-        }
-    }
     void BeFixedCamera(InputStateKind state)
     {
         if (state == InputStateKind.Touch)
@@ -140,8 +166,11 @@ public class UserInput : MonoBehaviour//입력처리
 
         }
     }
-    HelpCalculation calculation = new HelpCalculation();
 
+    public float TouchDecisionTime = GameScript.TouchDecisionTime;
+    public float timer = 0;
+    public CameraScript cameraScript = GameScript.cameraScript;
+    HelpCalculation calculation = new HelpCalculation();
     InputStateKind inputState = InputStateKind.StandBy;
     InputStateKind TouchInput()
     {
@@ -193,7 +222,10 @@ public class UserInput : MonoBehaviour//입력처리
                     if (timer > TouchDecisionTime)
                     {
                         //드래그
-                        inputState = InputStateKind.Drag;
+                        if(Map.insatance.mapArea[EnterTileXY.x][EnterTileXY.y].Piece is not null)
+                        {
+                            inputState = InputStateKind.Drag;
+                        }
                     }
                 }
                 if (inputState != InputStateKind.Drag)

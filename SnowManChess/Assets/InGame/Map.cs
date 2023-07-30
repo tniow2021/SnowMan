@@ -97,24 +97,26 @@ public class MapArea //맵진행상황
 
 public partial class Map : MonoBehaviour
 {
-    //----------------------------------싱글톤----------------------------
-    static Map insatance = new Map();
-    public static Map GetInstance()
-    {
-        return insatance;
-    }
+    //----------------------------------------------------------
+    public static Map insatance;
 
     //맵 세트
     MapSet mapSet;
-    //입력
-    public UserInput userInput;
     //가상 맵
     public List<List<MapArea>> mapArea = new List<List<MapArea>>();
     //---------------------------------------리스트----------------------------------------
     //타일오브젝트 총리스트
-    public List<List<GameObject>> List2TileObject = new List<List<GameObject>>();
+    List<List<GameObject>> List2TileObject = new List<List<GameObject>>();
+    public GameObject GetTileObj(Vector2Int XY)
+    {
+        return List2TileObject[XY.x][XY.y];
+    }
     //타일스크립트 총리스트
     public List<List<TileScript>> List2TileScript = new List<List<TileScript>>();
+    public TileScript GetTile(Vector2Int XY)
+    {
+        return List2TileScript[XY.x][XY.y];
+    }
     //기물오브젝트 총리스트
     public List<GameObject> PieceList = new List<GameObject>();
     //아이템오브젝트 총리스트
@@ -257,11 +259,11 @@ public partial class Map//서버로 올라가는 길
                     post.gameObject = mapArea[post.FromXY.x][post.FromXY.y].Piece;
 
                     //전송
-                    GameScript.GetInstance().FromMap(post);
+                    GameScript.instance.FromMap(post);
                 }
                 break;
         }
-        GameScript.GetInstance().FromMap(post);
+        GameScript.instance.FromMap(post);
     }
 }
 public partial class Map//내려가는 길

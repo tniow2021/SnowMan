@@ -73,7 +73,7 @@ public partial class TileScript : MonoBehaviour
         if (Input.touchCount == 1)
         {
             BeMouseOnTile = true;
-            map1.userInput.EnterTileSwitch(this.gameObject);
+            UserInput.instance.EnterTileSwitch(coordinate);
         }
     }
     private void OnMouseUp()

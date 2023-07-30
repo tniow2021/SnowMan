@@ -5,12 +5,7 @@ using UnityEngine.Rendering;
 
 public partial class GameScript : MonoBehaviour
 {
-    //-------------------------------싱글톤
-    static GameScript instance;
-    public static GameScript GetInstance()
-    {
-        return instance;
-    }
+
     /*
      * 게임시작시에만 필요한 정보
      * :체스판 크기, 타일별 정보들(지형, 자원)
@@ -32,9 +27,11 @@ public partial class GameScript : MonoBehaviour
      * 드래그 이동경로설정
      * 핑(오브젝트움직임의 최소단위 구현. 한 50ms로)
      */
+    public static GameScript instance;
     Map map1;
-    void Start()
+    void Start() 
     {
+        instance = this.gameObject.GetComponent<GameScript>();
         clientScript = ClientScript.GetClientScript();
         GameObject MapObject1 = new GameObject();
         MapSet mapSet1 = new MapSet()
@@ -67,8 +64,8 @@ public partial class GameScript : MonoBehaviour
                 {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
             }
         };
-        map1 = new Map();
-        map1.MapCreate(mapSet1);
+        Map.insatance = new Map();
+        Map.insatance.MapCreate(mapSet1);
         
     }
 }
@@ -108,17 +105,17 @@ public partial class GameScript //사전 설정
     public static GameObject RookPiece;
     public static GameObject PawnPiece;
 
-    public  GameObject _Testtile;
-    public  GameObject _EmptyTile;
-    public  GameObject _SnowTile;
-    public  GameObject _LakeTile;
+    public GameObject _Testtile;
+    public GameObject _EmptyTile;
+    public GameObject _SnowTile;
+    public GameObject _LakeTile;
 
-    public  GameObject _KingPiece;
-    public  GameObject _QueenPiece;
-    public  GameObject _BishopPiece;
-    public  GameObject _KnightPiece;
-    public  GameObject _RookPiece;
-    public  GameObject _PawnPiece;
+    public GameObject _KingPiece;
+    public GameObject _QueenPiece;
+    public GameObject _BishopPiece;
+    public GameObject _KnightPiece;
+    public GameObject _RookPiece;
+    public GameObject _PawnPiece;
 
     //입력관련
 
@@ -130,6 +127,8 @@ public partial class GameScript //사전 설정
 
     private void Awake()
     {
+        UserInput.instance = GetComponent<UserInput>();
+
         Testtile = _Testtile;
         EmptyTile = _EmptyTile;
         SnowTile = _SnowTile;
