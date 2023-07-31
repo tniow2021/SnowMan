@@ -24,7 +24,10 @@ public enum PK
 }
 public enum IK
 {
+    Ice
 }
 public enum BK
 {
+    none,
+    SnowWall
 }

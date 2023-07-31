@@ -7,6 +7,7 @@ using UnityEngine;
 
 public partial class TileScript //지형정의 관련
 {
+    public TK kind;
     /*
      * 위에 기물이 존재할때 데미지.
      * 가속력(배수곱이 아니라 더하기 연산으로.)
@@ -57,6 +58,15 @@ public partial class TileScript //외부에 호출당하는 거 관련
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
+    public void TileCandidate()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+    }
+    public void BetileWilte()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
 }
 
 public partial class TileScript //애니메이터관련 

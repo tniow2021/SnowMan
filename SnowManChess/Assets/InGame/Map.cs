@@ -125,10 +125,14 @@ public partial class Map : MonoBehaviour
     //아이템
     public static Dictionary<IK, GameObject> ItemDeictionary = new Dictionary<IK, GameObject>()
     {
+        
+
     };
     //건물
     public static Dictionary<BK, GameObject> BulidingDeictionary = new Dictionary<BK, GameObject>()
     {
+        {BK.none,null },
+        {BK.SnowWall,GameScript.SnowWallBuilding }
     };
     //----------------------------------------메소드-------------------------------------
 
@@ -191,6 +195,35 @@ public partial class Map : MonoBehaviour
 
                 //아이템 집어넣기
                 //건물집어넣기
+                if (BulidingDeictionary.TryGetValue(mapSet.BulidngSet[x, y], out GameObject OriginalBuliding))
+                {
+                    if (GameScript.SnowWallBuilding is null) print("이 미친 놈들아 그만햐");
+                    if (OriginalBuliding is not null)
+                    {
+                        print("나 사람살려어");
+                        GameObject newBuiilding = Instantiate(OriginalBuliding);
+                        //맵아레아에 넣는다.
+                        mapArea[x][y].Buliding = newBuiilding.GetComponent<BuildingScript>();
+                        //MapObject의 자식으로 만든다.
+                        newBuiilding.transform.parent = mapSet.MapObject.transform;
+                        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+                        newBuiilding.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
+                    }
+                }
+                if (BulidingDeictionary.TryGetValue(mapSet.BulidngSet[x, y], out GameObject OriginalItem))
+                {
+                    if (OriginalItem is not null)
+                    {
+                        GameObject newItem = Instantiate(OriginalItem);
+                        //맵아레아에 넣는다.
+                        mapArea[x][y].Item = newItem.GetComponent<ItemScript>();
+                        //MapObject의 자식으로 만든다.
+                        newItem.transform.parent = mapSet.MapObject.transform;
+                        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+                        newItem.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
+                    }
+                }
+
             }
             List2TileObject.Add(newList1TileObject);
             List2TileScript.Add(newList1TileScript);
@@ -241,7 +274,7 @@ public partial class Map
     {
         Vector2Int Piece = moveOrder.Piece;
         Vector2Int ToTile = moveOrder.ToTile;
-        if (GetMapArea(ToTile).Piece is null)//가려는 자리에 기물이 있으면
+        if (GetMapArea(ToTile).Piece is null)//가려는 자리에 기물이 없으면
         {
             //움직임
             GetMapArea(Piece).Piece.transform.localPosition
@@ -252,7 +285,7 @@ public partial class Map
             GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
             GetMapArea(Piece).Piece = null;
         }
-        else if(GetMapArea(ToTile).Piece is not null)//가려는 자리에 기물이 없으면
+        else if(GetMapArea(ToTile).Piece is not null)//가려는 자리에 기물이 있으면
         {
             //움직임
             GetMapArea(Piece).Piece.transform.localPosition
@@ -266,6 +299,50 @@ public partial class Map
             GetMapArea(Piece).Piece = null;
         }
         
+    }
+
+    public List<Vector2Int> PieceCanGoTileCandidate(Vector2Int PieceXY)
+    {
+        List<Vector2Int> PieceAbleCoordinate = GetMapArea(PieceXY).Piece.AbleCoordinate;
+
+        List<Vector2Int> Candidate = new List<Vector2Int>();
+        //맵내에서 기물이 이동가능한 위치찾기
+        foreach(Vector2Int xy in PieceAbleCoordinate)
+        {
+            Vector2Int xy2 = PieceXY + xy;
+            //맵내에 있어야하고 
+            if (xy2.x >= 0&&xy2.x<mapSet.X&& xy2.y >= 0 && xy2.y < mapSet.Y)
+            {
+                ////상대방 기물위치로만 갈 수 있지 자기 기물한텐 가지못하고
+                //if(GetMapArea(xy).Piece.user != me)
+                //자기위치는 안되고.
+                if(!Vector2Int.Equals(xy2,PieceXY))
+                {
+                    //거기에 무슨 건물이 있으면 안된다.
+                    if(GetMapArea(xy2).Buliding is null)
+                    {
+                        Candidate.Add(xy2);
+                    }
+                }
+            }
+        }
+        //화면에 표시
+        foreach(Vector2Int xy in Candidate)
+        {
+            GetMapArea(xy).Tile.TileCandidate();
+        }
+        return Candidate;
+    }
+
+    public void BeAllTileWhite()
+    {
+        foreach(List<MapArea> m in mapArea)
+        {
+            foreach(MapArea m2 in m)
+            {
+                m2.Tile.BetileWilte();
+            }
+        }
     }
     //기물이동(좌표,좌펴)
 

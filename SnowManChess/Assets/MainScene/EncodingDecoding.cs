@@ -15,15 +15,15 @@ public static partial class DataIng //인코딩
         dataSet.Add(255);//종결구분자
         return dataSet;
     }
-    public static List<byte> Encoding(Command.ToSer.PieceCreate order)
-    {
-        List<byte> data = new List<byte>();
-        data.Add(((byte)Command.Kind.PieceCreate));
-        data.Add(((byte)order.pieceKind1));
-        data.Add(((byte)order.X2));
-        data.Add(((byte)order.y3));
-        return data;
-    }
+    //public static List<byte> Encoding(Command.PieceCreate order)
+    //{
+    //    List<byte> data = new List<byte>();
+    //    data.Add(((byte)Command.Kind.PieceCreate));
+    //    data.Add(((byte)order.pieceKind1));
+    //    data.Add(((byte)order.X2));
+    //    data.Add(((byte)order.y3));
+    //    return data;
+    //}
 }
 public static partial class DataIng//디코딩
 {

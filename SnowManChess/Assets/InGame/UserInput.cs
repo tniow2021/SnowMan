@@ -20,7 +20,6 @@ public partial class UserInput : MonoBehaviour//입력처리
         {
             EnterTileXY = _EnterTileXY;
         }
-        print(EnterTileXY);
     }
 
     //--------------------------------------일반함수-----------------------------------

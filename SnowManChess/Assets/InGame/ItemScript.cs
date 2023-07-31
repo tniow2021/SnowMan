@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ItemScript : MonoBehaviour
 {
+    public IK kind;
     public Map map1;
     // Start is called before the first frame update
     void Start()

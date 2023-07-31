@@ -6,6 +6,8 @@ public partial class PieceScript : MonoBehaviour //기물정의
 {
     public Map map1;
 
+    public PK Kind;
+
     public Vector2Int Coordinate=new Vector2Int();
 
     public int AttackPower;

@@ -51,11 +51,11 @@ public partial class ClientScript : MonoBehaviour
         
         communi.Connect(ServerIP, ServerPort);
         //Å×½ºÆ®
-        Command.ToSer.PieceCreate order = new Command.ToSer.PieceCreate();
-        order.pieceKind1 = PK.King;
-        order.X2 = 5;
-        order.y3 = 7;
-        communi.Send(DataIng.MakeDataSet(DataIng.Encoding(order)));
+        //Command.ToSer.PieceCreate order = new Command.ToSer.PieceCreate();
+        //order.pieceKind1 = PK.King;
+        //order.X2 = 5;
+        //order.y3 = 7;
+        //communi.Send(DataIng.MakeDataSet(DataIng.Encoding(order)));
     }
 
     void Update()

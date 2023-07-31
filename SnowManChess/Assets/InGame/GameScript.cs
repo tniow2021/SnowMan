@@ -29,6 +29,10 @@ public partial class GameScript : MonoBehaviour
      */
     public static GameScript instance;
     Map map;
+    GameLogic Logic;
+
+    public User user1=new User("Damyeong", 30, 19);//임시로
+    User user2 = new User("Dongmin", 30, 18);
     void Start() 
     {
         instance = this.gameObject.GetComponent<GameScript>();
@@ -61,12 +65,26 @@ public partial class GameScript : MonoBehaviour
                 {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
                 {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
                 {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
+            },
+            BulidngSet =new BK[,]
+            {
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.SnowWall,BK.none,BK.SnowWall,BK.SnowWall,BK.SnowWall,BK.none,BK.none,BK.none },
+                {BK.none,BK.SnowWall,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.SnowWall,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
             }
+            
         };
         Map.insatance = new Map();
         map = Map.insatance;
         Map.insatance.MapCreate(mapSet1);
-        
+        Logic = new GameLogic(map.mapArea);
+
     }
 }
 public class MoveOrder
@@ -111,7 +129,8 @@ public partial class GameScript
         }
 
     }
-    MoveOrder moveOrder = new MoveOrder();
+    Command.PieceMove pieceMove = new Command.PieceMove();
+    List<Vector2Int> Candidate;//map.PieceCanGoTileCandidate(EnterXy);에게 반환받는다. 기물이 이동할 수 있는 타일위치리스트
     private void Update()
     {
         Vector2Int EnterXy; 
@@ -123,19 +142,20 @@ public partial class GameScript
         {
             if(state==InputStateKind.Touch)
             {
-                if(Map.insatance.mapArea[EnterXy.x][EnterXy.y].Tile.BeMouseOnTile is true)
+                if(Map.insatance.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
                 {
-                    if(map.mapArea[EnterXy.x][EnterXy.y].Piece is not null)//터치한 타일에 기물이 있어야 이동
+                    if(map.GetMapArea(EnterXy).Piece is not null)//터치한 타일에 기물이 있어야 
                     {
-                        map.mapArea[EnterXy.x][EnterXy.y].Tile.TileTouch();
-                        moveOrder.Piece = EnterXy;
+                        map.GetMapArea(EnterXy).Tile.TileTouch();
+                        pieceMove.piece = XY.ToXY(EnterXy);
                         inputMode = InputMode.Put;
+                        Candidate=map.PieceCanGoTileCandidate(EnterXy);
                     }
                 }
             }
             else if(state==InputStateKind.LongTouch)
             {
-                if (map.mapArea[EnterXy.x][EnterXy.y].Piece is not null)
+                if (map.GetMapArea(EnterXy).Piece is not null)
                 {
                     inputMode = InputMode.Route;
                 }
@@ -143,14 +163,16 @@ public partial class GameScript
         }
         else if (inputMode == InputMode.Put)
         {
-            if (map.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
+            if (state == InputStateKind.Touch)
             {
-                if (state == InputStateKind.Touch)
+                if (map.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
                 {
-                    if (moveOrder.Piece != EnterXy)//기물을 이동시킬 타일지정함
+                    if (! XY.Equals(pieceMove.piece,XY.ToXY( EnterXy)))//기물을 이동시킬 타일지정함
                     {
-                        moveOrder.ToTile = EnterXy;
-                        map.PieceMove(moveOrder);
+                        pieceMove.ToTile = XY.ToXY(EnterXy);
+                        Logic.PieceMove(pieceMove);
+
+                        map.BeAllTileWhite();
                         map.GetMapArea(EnterXy).Tile.GetComponent<SpriteRenderer>().color = Color.blue;
 
                         inputMode = InputMode.Pick;
@@ -219,6 +241,14 @@ public partial class GameScript //사전 설정
     public GameObject _RookPiece;
     public GameObject _PawnPiece;
 
+    //건물종류
+    public static GameObject SnowWallBuilding;
+    public GameObject _SnowWallBuilding;
+
+    //아이템 종류
+    public static GameObject Ice;
+    public GameObject _Ice;
+
     //입력관련
 
     public float _TouchDecisionTime = 0.7f;
@@ -242,6 +272,9 @@ public partial class GameScript //사전 설정
         KnightPiece = _KnightPiece;
         RookPiece = _RookPiece;
         PawnPiece = _PawnPiece;
+
+        SnowWallBuilding = _SnowWallBuilding;
+        Ice = _Ice;
 
         cameraScript = _CameraScript;
         TouchDecisionTime = _TouchDecisionTime;
