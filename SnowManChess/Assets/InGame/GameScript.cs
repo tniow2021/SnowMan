@@ -97,7 +97,8 @@ public enum InputMode
 {
     Pick,
     Put,//이동할장소를  지정
-    Route
+    Route,
+    Disposition//임시. 멘토링용. 기물선택자.
 }
 public partial class GameScript
 {
@@ -199,11 +200,55 @@ public partial class GameScript
             map.GetMapArea(EnterXy).Tile.TileDrag();
 
         }
+        else if(inputMode==InputMode.Disposition)//임시 
+        {
+            if (state == InputStateKind.Touch)
+            {
+                if(testScript.젠장==하.건물)
+                {
+                    map.BuildingCreate(bkk, EnterXy);
+                    inputMode = InputMode.Pick;
+                }
+                if (testScript.젠장 == 하.기물)
+                {
+                    map.PieceCreate(Pkk, EnterXy);
+                    inputMode = InputMode.Pick;
+                }
+                if (testScript.젠장 == 하.타일)
+                {
+                    map.TileCreate(Tkk, EnterXy);
+                    inputMode = InputMode.Pick;
+                }
+            }
+        }
         BeFixedCamera(inputMode);
 
 
     }
 }
+
+public partial class GameScript//커스텀 기물-건물-타일 배치
+{
+    PK Pkk;
+    TK Tkk;
+    BK bkk;
+    public void KindReceived(PK pk)
+    {
+        inputMode = InputMode.Disposition;
+        Pkk = pk;
+    }
+    public void KindReceived(TK tk)
+    {
+        Tkk = tk;
+        inputMode = InputMode.Disposition;
+    }
+    public void KindReceived(BK bk)
+    {
+        bkk = bk;
+        inputMode = InputMode.Disposition;
+    }
+}
+
 
 public partial class GameScript //서버로 올라가는 길
 {

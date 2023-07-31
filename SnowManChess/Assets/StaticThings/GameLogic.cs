@@ -121,5 +121,6 @@ public class GameLogic
 
         }
         GetMapArea(xy).Piece.ObjectDestory();
+        GetMapArea(xy).Piece = null;
     }
 }

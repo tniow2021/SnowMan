@@ -125,7 +125,7 @@ public partial class Map : MonoBehaviour
     //아이템
     public static Dictionary<IK, GameObject> ItemDeictionary = new Dictionary<IK, GameObject>()
     {
-        
+        {IK.Ice,GameScript.Ice }
 
     };
     //건물
@@ -210,19 +210,19 @@ public partial class Map : MonoBehaviour
                         newBuiilding.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
                     }
                 }
-                if (BulidingDeictionary.TryGetValue(mapSet.BulidngSet[x, y], out GameObject OriginalItem))
-                {
-                    if (OriginalItem is not null)
-                    {
-                        GameObject newItem = Instantiate(OriginalItem);
-                        //맵아레아에 넣는다.
-                        mapArea[x][y].Item = newItem.GetComponent<ItemScript>();
-                        //MapObject의 자식으로 만든다.
-                        newItem.transform.parent = mapSet.MapObject.transform;
-                        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-                        newItem.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
-                    }
-                }
+                //if (ItemDeictionary.TryGetValue(mapSet.ItemSet[x, y], out GameObject OriginalItem))
+                //{
+                //    if (OriginalItem is not null)
+                //    {
+                //        GameObject newItem = Instantiate(OriginalItem);
+                //        //맵아레아에 넣는다.
+                //        mapArea[x][y].Item = newItem.GetComponent<ItemScript>();
+                //        //MapObject의 자식으로 만든다.
+                //        newItem.transform.parent = mapSet.MapObject.transform;
+                //        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+                //        newItem.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
+                //    }
+                //}
 
             }
             List2TileObject.Add(newList1TileObject);
@@ -347,6 +347,61 @@ public partial class Map
     //기물이동(좌표,좌펴)
 
     //온난화짐행();
+
+
+
+
+
+    //멘토링용 임시.
+    public void PieceCreate(PK pkk,Vector2Int xy)
+    {
+        if (pkk == PK.none)
+        {
+            if (GetMapArea(xy).Piece is not null) GetMapArea(xy).Piece.ObjectDestory();
+            GetMapArea(xy).Piece = null;
+            return;
+        }
+        if (GetMapArea(xy).Piece is not null)GetMapArea(xy).Piece.ObjectDestory();
+        PieceDictionary.TryGetValue(pkk, out GameObject OriginalPiece);
+        GameObject newPiece= Instantiate(OriginalPiece);
+        //맵아레아에 넣는다.
+        GetMapArea(xy).Piece = newPiece.GetComponent<PieceScript>();
+        //MapObject의 자식으로 만든다.
+        newPiece.transform.parent = mapSet.MapObject.transform;
+        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+        newPiece.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
+    }
+    public void TileCreate(TK tkk, Vector2Int xy)
+    {
+        if (GetMapArea(xy).Tile is not null) GetMapArea(xy).Tile.ObjectDestory();
+        TileDictionnary.TryGetValue(tkk, out GameObject OriginalTile);
+        GameObject newTile = Instantiate(OriginalTile);
+        newTile.GetComponent<TileScript>().coordinate = new Vector2Int(xy.x, xy.y);
+        //맵아레아에 넣는다.
+        GetMapArea(xy).Tile = newTile.GetComponent<TileScript>();
+        //MapObject의 자식으로 만든다.
+        newTile.transform.parent = mapSet.MapObject.transform;
+        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+        newTile.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
+    }
+    public void BuildingCreate(BK bkk,Vector2Int xy)
+    {
+        if(bkk==BK.none)
+        {
+            if (GetMapArea(xy).Buliding is not null) GetMapArea(xy).Buliding.ObjectDestory();
+            GetMapArea(xy).Buliding = null;
+            return;
+        }
+        if (GetMapArea(xy).Buliding is not null) GetMapArea(xy).Buliding.ObjectDestory();
+        BulidingDeictionary.TryGetValue(bkk, out GameObject OriginalBuilding);
+        GameObject newBuilding = Instantiate(OriginalBuilding);
+        //맵아레아에 넣는다.
+        GetMapArea(xy).Buliding = newBuilding.GetComponent<BuildingScript>();
+        //MapObject의 자식으로 만든다.
+        newBuilding.transform.parent = mapSet.MapObject.transform;
+        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
+        newBuilding.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
+    }    
 
 }
 

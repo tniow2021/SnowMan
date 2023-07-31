@@ -91,4 +91,9 @@ public partial class TileScript
     {
         BeMouseOnTile = false;
     }
+    
+    public void ObjectDestory()
+    {
+        Destroy(this.gameObject);
+    }
 }

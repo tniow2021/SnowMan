@@ -9,4 +9,8 @@ public class BuildingScript : MonoBehaviour
     /*
      * 눈자원을 하나 소모해서 만드는 얼음장벽
      */
+    public void ObjectDestory()
+    {
+        Destroy(this.gameObject);
+    }
 }
