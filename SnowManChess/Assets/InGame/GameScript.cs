@@ -207,6 +207,7 @@ public partial class GameScript
 
             if (state == InputStateKind.Touch)
             {
+                map.BeAllTileWhite();
                 if (testScript.¡®¿Â==«œ.∞«π∞)
                 {
                     map.BuildingCreate(bkk, EnterXy);
