@@ -20,7 +20,19 @@ public enum PK
     Bishop,
     Knight,
     Rook,
-    Pawn
+    Pawn,
+
+    Aking,
+    Aknight,
+    Abishop,
+    Apown,
+    Arook,
+
+    Bking,
+    Bknight,
+    Bbishop,
+    Bpown,
+    Brook,
 }
 public enum IK
 {

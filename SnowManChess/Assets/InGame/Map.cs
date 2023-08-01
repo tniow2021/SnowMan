@@ -120,7 +120,19 @@ public partial class Map : MonoBehaviour
         {PK.Bishop,GameScript.BishopPiece },
         {PK.Knight,GameScript.KnightPiece },
         {PK.Rook,GameScript.RookPiece },
-        {PK.Pawn,GameScript.PawnPiece }
+        {PK.Pawn,GameScript.PawnPiece },
+
+        {PK.Aking, GameScript.Aking},
+        {PK.Abishop,GameScript.Abishop },
+        {PK.Aknight,GameScript.Aknight },
+        {PK.Arook,GameScript.Arook },
+        {PK.Apown,GameScript.Apown },
+
+        {PK.Bking, GameScript.Bking},
+        {PK.Bbishop,GameScript.Bbishop },
+        {PK.Bknight,GameScript.Bknight },
+        {PK.Brook,GameScript.Brook },
+        {PK.Bpown,GameScript.Bpown }
     };
     //æ∆¿Ã≈€
     public static Dictionary<IK, GameObject> ItemDeictionary = new Dictionary<IK, GameObject>()

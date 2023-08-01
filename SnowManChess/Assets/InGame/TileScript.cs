@@ -58,6 +58,10 @@ public partial class TileScript //외부에 호출당하는 거 관련
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
+    public void Tiletest()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
+    }
     public void TileCandidate()
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;

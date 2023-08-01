@@ -44,7 +44,7 @@ public partial class GameScript : MonoBehaviour
             Y = 9,
             TileSet = new TK[,]
             {
-                {TK.Lake,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
+                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
@@ -56,24 +56,24 @@ public partial class GameScript : MonoBehaviour
             },
             PieceSet = new PK[,]
             {
-                {PK.King,PK.none,PK.Knight,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.Knight,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.none,PK.Rook,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.Rook,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.Queen,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.King,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
+                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
             },
             BulidngSet =new BK[,]
             {
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.SnowWall,BK.none,BK.SnowWall,BK.SnowWall,BK.SnowWall,BK.none,BK.none,BK.none },
-                {BK.none,BK.SnowWall,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.SnowWall,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
@@ -145,7 +145,9 @@ public partial class GameScript
             {
                 if(Map.insatance.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
                 {
-                    if(map.GetMapArea(EnterXy).Piece is not null)//터치한 타일에 기물이 있어야 
+
+                    map.GetMapArea(EnterXy).Tile.Tiletest();
+                    if (map.GetMapArea(EnterXy).Piece is not null)//터치한 타일에 기물이 있어야 
                     {
                         map.GetMapArea(EnterXy).Tile.TileTouch();
                         pieceMove.piece = XY.ToXY(EnterXy);
@@ -202,9 +204,10 @@ public partial class GameScript
         }
         else if(inputMode==InputMode.Disposition)//임시 
         {
+
             if (state == InputStateKind.Touch)
             {
-                if(testScript.젠장==하.건물)
+                if (testScript.젠장==하.건물)
                 {
                     map.BuildingCreate(bkk, EnterXy);
                     inputMode = InputMode.Pick;
@@ -285,6 +288,30 @@ public partial class GameScript //사전 설정
     public GameObject _KnightPiece;
     public GameObject _RookPiece;
     public GameObject _PawnPiece;
+    //ssssssssssssssssssss
+    public GameObject _Aking;
+    public GameObject _Aknight;
+    public GameObject _Abishop;
+    public GameObject _Apown;
+    public GameObject _Arook;
+    public GameObject _Bking;
+    public GameObject _Bknight;
+    public GameObject _Bbishop;
+    public GameObject _Bpown;
+    public GameObject _Brook;
+
+    public  static GameObject Aking;
+    public static GameObject Aknight;
+    public static GameObject Abishop;
+    public static GameObject Apown;
+    public static GameObject Arook;
+    public static GameObject Bking;
+    public static GameObject Bknight;
+    public static GameObject Bbishop;
+    public static GameObject Bpown;
+    public static GameObject Brook;
+
+
 
     //건물종류
     public static GameObject SnowWallBuilding;
@@ -317,13 +344,42 @@ public partial class GameScript //사전 설정
         KnightPiece = _KnightPiece;
         RookPiece = _RookPiece;
         PawnPiece = _PawnPiece;
+        //
+        Aking = _Aking;
+        Aknight = _Aknight;
+        Abishop = _Abishop;
+        Apown = _Apown;
+        Arook = _Arook;
+
+        Bking = _Bking;
+        Bknight = _Bknight;
+        Bbishop = _Bbishop;
+        Bpown = _Bpown;
+        Brook = _Brook;
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //
 
         SnowWallBuilding = _SnowWallBuilding;
         Ice = _Ice;
 
         cameraScript = _CameraScript;
         TouchDecisionTime = _TouchDecisionTime;
+
+
     }
+
 }
 
 
