@@ -28,20 +28,25 @@ public partial class GameScript : MonoBehaviour
      * 핑(오브젝트움직임의 최소단위 구현. 한 50ms로)
      */
     public static GameScript instance;
-    Map map;
+    private void Awake()
+    {
+        UserInput.instance = GetComponent<UserInput>();
+
+    }
+
     GameLogic Logic;
 
     public User user1=new User("Damyeong", 30, 19);//임시로
     User user2 = new User("Dongmin", 30, 18);
-    void Start() 
+
+    public Map map;
+    void Start()
     {
+        
         instance = this.gameObject.GetComponent<GameScript>();
-        GameObject MapObject1 = new GameObject();
         MapSet mapSet1 = new MapSet()
         {
-            MapObject = MapObject1,
-            X = 9,
-            Y = 9,
+            size = new Vector2Int(9, 9),
             TileSet = new TK[,]
             {
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
@@ -66,7 +71,7 @@ public partial class GameScript : MonoBehaviour
                 {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
                 {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
             },
-            BulidngSet =new BK[,]
+            BulidngSet = new BK[,]
             {
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
@@ -77,12 +82,23 @@ public partial class GameScript : MonoBehaviour
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
                 {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
+            },
+            ItemSet=new IK[,]
+            {
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
+                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none }
             }
             
+
         };
-        Map.insatance = new Map();
-        map = Map.insatance;
-        Map.insatance.MapCreate(mapSet1);
+        map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
 
     }
@@ -100,8 +116,14 @@ public enum InputMode
     Route,
     Disposition//임시. 멘토링용. 기물선택자.
 }
+
 public partial class GameScript
 {
+
+    //입력관련
+
+ 
+    public CameraScript cameraScript;
     public List<Vector2Int> RouteList = new List<Vector2Int>();
 
     public InputMode inputMode = InputMode.Pick;
@@ -132,33 +154,41 @@ public partial class GameScript
     }
     Command.PieceMove pieceMove = new Command.PieceMove();
     List<Vector2Int> Candidate;//map.PieceCanGoTileCandidate(EnterXy);에게 반환받는다. 기물이 이동할 수 있는 타일위치리스트
+    
+    
+ 
+
     private void Update()
     {
-        Vector2Int EnterXy; 
-        int state=UserInput.instance.StateCherk(out EnterXy);
+         
+        int state=UserInput.instance.StateCherk();
+        (Vector2Int EnterXY, bool BeMouseOnArea, Area area) a = map.mapArea.TouchCherk();
+        Vector2Int EnterXY = a.EnterXY;
+        bool BeMouseOnArea = a.BeMouseOnArea;
+        print(EnterXY);
+        print(BeMouseOnArea);
+        Area area = a.area;
 
-
-
-        if(inputMode ==InputMode.Pick)
+        if (inputMode ==InputMode.Pick)
         {
             if(state==InputStateKind.Touch)
             {
-                if(Map.insatance.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
+                if(BeMouseOnArea is true)
                 {
 
-                    map.GetMapArea(EnterXy).Tile.Tiletest();
-                    if (map.GetMapArea(EnterXy).Piece is not null)//터치한 타일에 기물이 있어야 
+                    map.FindArea(EnterXY).tile.Tiletest();
+                    if (map.FindArea(EnterXY).piece is not null)//터치한 타일에 기물이 있어야 
                     {
-                        map.GetMapArea(EnterXy).Tile.TileTouch();
-                        pieceMove.piece = XY.ToXY(EnterXy);
+                        map.FindArea(EnterXY).tile.TileTouch();
+                        pieceMove.piece = XY.ToXY(EnterXY);
                         inputMode = InputMode.Put;
-                        Candidate=map.PieceCanGoTileCandidate(EnterXy);
+                        Candidate=map.PieceCanGoTileCandidate(EnterXY);
                     }
                 }
             }
             else if(state==InputStateKind.LongTouch)
             {
-                if (map.GetMapArea(EnterXy).Piece is not null)
+                if (map.FindArea(EnterXY).piece is not null)
                 {
                     inputMode = InputMode.Route;
                 }
@@ -168,15 +198,15 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                if (map.GetMapArea(EnterXy).Tile.BeMouseOnTile is true)
+                if (BeMouseOnArea)
                 {
-                    if (! XY.Equals(pieceMove.piece,XY.ToXY( EnterXy)))//기물을 이동시킬 타일지정함
+                    if (! XY.Equals(pieceMove.piece,XY.ToXY(EnterXY)))//기물을 이동시킬 타일지정함
                     {
-                        pieceMove.ToTile = XY.ToXY(EnterXy);
+                        pieceMove.ToTile = XY.ToXY(EnterXY);
                         Logic.PieceMove(pieceMove);
 
                         map.BeAllTileWhite();
-                        map.GetMapArea(EnterXy).Tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                        map.FindArea(EnterXY).tile.GetComponent<SpriteRenderer>().color = Color.blue;
 
                         inputMode = InputMode.Pick;
                     }
@@ -199,7 +229,7 @@ public partial class GameScript
             {
                 inputMode = InputMode.Pick;
             }
-            map.GetMapArea(EnterXy).Tile.TileDrag();
+            map.FindArea(EnterXY).tile.TileDrag();
 
         }
         else if(inputMode==InputMode.Disposition)//임시 
@@ -210,17 +240,17 @@ public partial class GameScript
                 map.BeAllTileWhite();
                 if (testScript.젠장==하.건물)
                 {
-                    map.BuildingCreate(bkk, EnterXy);
+                    map.Create(bkk, area);
                     inputMode = InputMode.Pick;
                 }
                 if (testScript.젠장 == 하.기물)
                 {
-                    map.PieceCreate(Pkk, EnterXy);
+                    map.Create(Pkk, area);
                     inputMode = InputMode.Pick;
                 }
                 if (testScript.젠장 == 하.타일)
                 {
-                    map.TileCreate(Tkk, EnterXy);
+                    map.Create(Tkk, area);
                     inputMode = InputMode.Pick;
                 }
             }
@@ -264,122 +294,8 @@ public partial class GameScript //Map으로 내려가는 길
 }
 public partial class GameScript //사전 설정
 {
-    //타일종류
-    public static GameObject Testtile;
-    public static GameObject EmptyTile;
-    public static GameObject SnowTile;
-    public static GameObject LakeTile;
-
-    //기물종류
-    public static GameObject KingPiece;
-    public static GameObject QueenPiece;
-    public static GameObject BishopPiece;
-    public static GameObject KnightPiece;
-    public static GameObject RookPiece;
-    public static GameObject PawnPiece;
-
-    public GameObject _Testtile;
-    public GameObject _EmptyTile;
-    public GameObject _SnowTile;
-    public GameObject _LakeTile;
-
-    public GameObject _KingPiece;
-    public GameObject _QueenPiece;
-    public GameObject _BishopPiece;
-    public GameObject _KnightPiece;
-    public GameObject _RookPiece;
-    public GameObject _PawnPiece;
-    //ssssssssssssssssssss
-    public GameObject _Aking;
-    public GameObject _Aknight;
-    public GameObject _Abishop;
-    public GameObject _Apown;
-    public GameObject _Arook;
-    public GameObject _Bking;
-    public GameObject _Bknight;
-    public GameObject _Bbishop;
-    public GameObject _Bpown;
-    public GameObject _Brook;
-
-    public  static GameObject Aking;
-    public static GameObject Aknight;
-    public static GameObject Abishop;
-    public static GameObject Apown;
-    public static GameObject Arook;
-    public static GameObject Bking;
-    public static GameObject Bknight;
-    public static GameObject Bbishop;
-    public static GameObject Bpown;
-    public static GameObject Brook;
 
 
-
-    //건물종류
-    public static GameObject SnowWallBuilding;
-    public GameObject _SnowWallBuilding;
-
-    //아이템 종류
-    public static GameObject Ice;
-    public GameObject _Ice;
-
-    //입력관련
-
-    public float _TouchDecisionTime = 0.7f;
-    public static float TouchDecisionTime;
-    public CameraScript _CameraScript;
-    public static CameraScript cameraScript;
-
-
-    private void Awake()
-    {
-        UserInput.instance = GetComponent<UserInput>();
-
-        Testtile = _Testtile;
-        EmptyTile = _EmptyTile;
-        SnowTile = _SnowTile;
-        LakeTile = _LakeTile;
-
-        KingPiece = _KingPiece;
-        QueenPiece = _QueenPiece;
-        BishopPiece = _BishopPiece;
-        KnightPiece = _KnightPiece;
-        RookPiece = _RookPiece;
-        PawnPiece = _PawnPiece;
-        //
-        Aking = _Aking;
-        Aknight = _Aknight;
-        Abishop = _Abishop;
-        Apown = _Apown;
-        Arook = _Arook;
-
-        Bking = _Bking;
-        Bknight = _Bknight;
-        Bbishop = _Bbishop;
-        Bpown = _Bpown;
-        Brook = _Brook;
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //
-
-        SnowWallBuilding = _SnowWallBuilding;
-        Ice = _Ice;
-
-        cameraScript = _CameraScript;
-        TouchDecisionTime = _TouchDecisionTime;
-
-
-    }
 
 }
 

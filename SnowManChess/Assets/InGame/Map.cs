@@ -56,218 +56,131 @@ using UnityEngine;
 
 public class MapSet
 {
-    public int X;
-    public int Y;
+    public Vector2Int size;
     public TK[,] TileSet;
     public PK[,] PieceSet;
     public IK[,] ItemSet;
     public BK[,] BulidngSet;
-    public GameObject MapObject;
 }
-
-public class MapArea //맵진행상황
+public class MapAreas
 {
-    public TileScript Tile;
-    public PieceScript Piece;
-    public ItemScript Item;
-    public BuildingScript Buliding;
+
+    List<List<Area>> areas=new List<List<Area>>();
+    int xSize;
+    int ySize;
+    public MapAreas(Map map,Vector2Int mapSize)
+    {
+        areas = new List<List<Area>>();
+        xSize = mapSize.x;
+        ySize = mapSize.y;
+        for(int i=0; i< mapSize.x;i++)
+        {
+            List<Area> row = new List<Area>();
+            for (int j=0;j< mapSize.y;j++)
+            {
+                GameObject newareaObject = MonoBehaviour.Instantiate(ObjectDict.Instance.area.gameObject);
+                newareaObject.transform.parent = map.transform;
+                newareaObject.transform.localPosition = new Vector3(i, j, 0);
+                Area newArea = newareaObject.GetComponent<Area>();
+                newArea.mapAreas = this;
+                newArea.xy = new Vector2Int(i, j);//좌표지정
+                row.Add(newArea);
+            }
+            areas.Add(row);
+        }
+    }
+    //게임스크립트로 가는놈
+    public (Vector2Int,bool,Area ) TouchCherk()
+    {
+        return (EnterXY, Find(EnterXY).BeMouseOnArea, Find(EnterXY));
+    }
+    Vector2Int EnterXY;
+    public void EnterXySwitch(Vector2Int xy)
+    {
+        EnterXY = xy;
+    }
+
+    //메소드
+    public bool Insert(Vector2Int Index,Area area)
+    {
+        if (Index.x > xSize - 1 || Index.x < 0) return false;
+        else if (Index.y > ySize - 1 || Index.y < 0) return false;
+
+        areas[Index.x][Index.y] = area;
+        return true;
+    }
+    public Area Find(int x, int y)
+    {
+        return areas[x][y];
+    }
+    public Area Find(Vector2Int index)
+    {
+        return areas[index.x][index.y];
+    }
+
+    public void Turn(int turnNumber)
+    {
+        for(int i=0;i<xSize;i++)
+        {
+            for(int j=0;j<ySize;j++)
+            {
+                areas[i][j].tile.Turn(turnNumber);
+                areas[i][j].piece.Turn(turnNumber);
+                areas[i][j].building.Turn(turnNumber);
+                areas[i][j].item.Turn(turnNumber);
+            }
+        }
+    }
 }
 
 public partial class Map : MonoBehaviour
 {
-    //----------------------------------------------------------
-    public static Map insatance;
+
 
     //맵 세트
     MapSet mapSet;
-    //가상 맵
-    public List<List<MapArea>> mapArea = new List<List<MapArea>>();
-    //---------------------------------------리스트----------------------------------------
-    //타일오브젝트 총리스트
-    List<List<GameObject>> List2TileObject = new List<List<GameObject>>();
-    public GameObject GetTileObj(Vector2Int XY)
-    {
-        return List2TileObject[XY.x][XY.y];
-    }
-    //타일스크립트 총리스트
-    public List<List<TileScript>> List2TileScript = new List<List<TileScript>>();
-    public TileScript GetTile(Vector2Int XY)
-    {
-        return List2TileScript[XY.x][XY.y];
-    }
-    //기물오브젝트 총리스트
-    public List<GameObject> PieceList = new List<GameObject>();
-    //아이템오브젝트 총리스트
-    public List<GameObject> ItemList = new List<GameObject>();
-    //건뭉오브젝트 총리스트
-    public List<GameObject> BulidingList = new List<GameObject>();
+    public MapAreas mapArea;
 
-    //----------------------------------------사전---------------------------------------------
-    //타일
-    public static Dictionary<TK, GameObject> TileDictionnary = new Dictionary<TK, GameObject>()
-    {
-        {TK.none,GameScript.EmptyTile },//타일셋에서는 None이면 빈자리를 표현하는 게임오브젝트를 넣어주고
-        {TK.test, GameScript.Testtile},
-        {TK.Snow,GameScript.SnowTile },
-        {TK.Lake,GameScript.LakeTile },
-    };
-    //기물
-    public static Dictionary<PK, GameObject> PieceDictionary = new Dictionary<PK, GameObject>()
-    {
-        {PK.none, null}, //기물셋에서는 None이면 NULL값으로 처리한다. NUll값이면 기물을 배치안하는 걸로한다.
-        {PK.King, GameScript.KingPiece},
-        {PK.Queen,GameScript.QueenPiece },
-        {PK.Bishop,GameScript.BishopPiece },
-        {PK.Knight,GameScript.KnightPiece },
-        {PK.Rook,GameScript.RookPiece },
-        {PK.Pawn,GameScript.PawnPiece },
-
-        {PK.Aking, GameScript.Aking},
-        {PK.Abishop,GameScript.Abishop },
-        {PK.Aknight,GameScript.Aknight },
-        {PK.Arook,GameScript.Arook },
-        {PK.Apown,GameScript.Apown },
-
-        {PK.Bking, GameScript.Bking},
-        {PK.Bbishop,GameScript.Bbishop },
-        {PK.Bknight,GameScript.Bknight },
-        {PK.Brook,GameScript.Brook },
-        {PK.Bpown,GameScript.Bpown }
-    };
-    //아이템
-    public static Dictionary<IK, GameObject> ItemDeictionary = new Dictionary<IK, GameObject>()
-    {
-        {IK.Ice,GameScript.Ice }
-
-    };
-    //건물
-    public static Dictionary<BK, GameObject> BulidingDeictionary = new Dictionary<BK, GameObject>()
-    {
-        {BK.none,null },
-        {BK.SnowWall,GameScript.SnowWallBuilding }
-    };
     //----------------------------------------메소드-------------------------------------
 
     public void MapCreate(MapSet _mapSet)
     {
+        
         mapSet = _mapSet;
-        for (int i=0;i<mapSet.X;i++)
-        {
-            mapArea.Add(new List<MapArea>());
-            for (int j = 0; j< mapSet.X; j++)
-            {
-                mapArea[i].Add(new MapArea());
-            }
-        }
+        mapArea = new MapAreas(this, mapSet.size);
 
         //메모리 만들기
-        for (int x = 0; x < mapSet.X; x++)
+        for (int x = 0; x < mapSet.size.x; x++)
         {
-            List<TileScript> newList1TileScript = new List<TileScript>();
-            List<GameObject> newList1TileObject = new List<GameObject>();
-            for (int y = 0; y < mapSet.Y; y++)// 오브젝트 단위 할당
+            for (int y = 0; y < mapSet.size.y; y++)// 오브젝트 단위 할당
             {
                 //타일 집어넣기
                 //맵셋의 타일셋에서 TK값을 불러와 그걸로 타일딕셔너리에서 검색
-                GameObject Originaltile = TileDictionnary[mapSet.TileSet[x, y]];
-                if (Originaltile is not null)
-                {
 
-                    //TileSet[x,y]값이 none이더라도 EmptyTile이라는 친구가 생성된다.
-                    GameObject newTileObject = Instantiate(Originaltile);//중요
-                    TileScript newtileScript = newTileObject.GetComponent<TileScript>();
-                    //맵아레아에 넣는다.
-                    
-                    mapArea[x][y].Tile= newtileScript;
-                    //MapObject의 자식으로 만든다.
-                    newTileObject.transform.parent = mapSet.MapObject.transform;
-                    //MapObject아래 좌표값으로 배치한다
-                    newTileObject.transform.localPosition = new Vector3(x, y, 0);
 
-                    newtileScript.coordinate = new Vector2Int(x, y);
+                Area area = FindArea(x, y);
 
-                    newList1TileObject.Add(newTileObject);
-                    newList1TileScript.Add(newtileScript);
-                }
 
-                //기물집어넣기
-                if (PieceDictionary.TryGetValue(mapSet.PieceSet[x, y], out GameObject OriginalPiece))
-                {
-                    if (OriginalPiece is not null)
-                    {
-                        GameObject newPiece = Instantiate(OriginalPiece);
-                        //맵아레아에 넣는다.
-                        mapArea[x][y].Piece = newPiece.GetComponent<PieceScript>();
-                        //MapObject의 자식으로 만든다.
-                        newPiece.transform.parent = mapSet.MapObject.transform;
-                        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-                        newPiece.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
-                    }
-                }
+                Create(mapSet.TileSet[x, y], area);
+                Create(mapSet.PieceSet[x, y], area);
+                Create(mapSet.BulidngSet[x, y], area);
+                Create(mapSet.ItemSet[x, y], area);
 
-                //아이템 집어넣기
-                //건물집어넣기
-                if (BulidingDeictionary.TryGetValue(mapSet.BulidngSet[x, y], out GameObject OriginalBuliding))
-                {
-                    if (GameScript.SnowWallBuilding is null) print("이 미친 놈들아 그만햐");
-                    if (OriginalBuliding is not null)
-                    {
-                        print("나 사람살려어");
-                        GameObject newBuiilding = Instantiate(OriginalBuliding);
-                        //맵아레아에 넣는다.
-                        mapArea[x][y].Buliding = newBuiilding.GetComponent<BuildingScript>();
-                        //MapObject의 자식으로 만든다.
-                        newBuiilding.transform.parent = mapSet.MapObject.transform;
-                        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-                        newBuiilding.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
-                    }
-                }
-                //if (ItemDeictionary.TryGetValue(mapSet.ItemSet[x, y], out GameObject OriginalItem))
-                //{
-                //    if (OriginalItem is not null)
-                //    {
-                //        GameObject newItem = Instantiate(OriginalItem);
-                //        //맵아레아에 넣는다.
-                //        mapArea[x][y].Item = newItem.GetComponent<ItemScript>();
-                //        //MapObject의 자식으로 만든다.
-                //        newItem.transform.parent = mapSet.MapObject.transform;
-                //        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-                //        newItem.transform.localPosition = new Vector3(x, y, 0) + MainScript.LocalPositionOfPieceOntile;
-                //    }
-                //}
-
-            }
-            List2TileObject.Add(newList1TileObject);
-            List2TileScript.Add(newList1TileScript);
-        }
-        ClassConnect();
-    }
-    void ClassConnect()
-    {
-         //Map과 기물,타일, 아이템, 건물등의클래스를 서로 연결하기(상호참조하기)
-        foreach(List<TileScript> obj in List2TileScript)
-        {
-            foreach(TileScript objj in obj)
-            {
-                objj.map1 = this;
+                mapArea.Insert(new Vector2Int(x, y), area);
             }
         }
-        foreach(GameObject obj in PieceList)
-        {
-            obj.GetComponent<PieceScript>().map1 = this;
-        }
-        foreach (GameObject obj in ItemList)
-        {
-            obj.GetComponent<ItemScript>().map1 = this;
-        }
-        foreach (GameObject obj in BulidingList)
-        {
-            obj.GetComponent<BuildingScript>().map1 = this;
-        }
     }
-    public MapArea GetMapArea(Vector2Int XY)
+    public void Turn(int turnNumber)
     {
-        return mapArea[XY.x][XY.y];
+        mapArea.Turn(turnNumber);
+    }
+    public Area FindArea(Vector2Int index)
+    {
+        return mapArea.Find(index);
+    }
+    public Area FindArea(int x,int y)
+    {
+        return mapArea.Find(new Vector2Int(x,y));
     }
 }
 public partial class Map//서버로 올라가는 길
@@ -282,40 +195,11 @@ public partial class Map//내려가는 길
 }
 public partial class Map
 {   
-    public void PieceMove(MoveOrder moveOrder)//가려는 자리에 기물이 있으면 파괴후 이동.
-    {
-        Vector2Int Piece = moveOrder.Piece;
-        Vector2Int ToTile = moveOrder.ToTile;
-        if (GetMapArea(ToTile).Piece is null)//가려는 자리에 기물이 없으면
-        {
-            //움직임
-            GetMapArea(Piece).Piece.transform.localPosition
-            = new Vector3(moveOrder.ToTile.x, moveOrder.ToTile.y, 0);
-            //좌표지정
-            GetMapArea(Piece).Piece.Coordinate = moveOrder.ToTile;
-            //스크립트 교체
-            GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
-            GetMapArea(Piece).Piece = null;
-        }
-        else if(GetMapArea(ToTile).Piece is not null)//가려는 자리에 기물이 있으면
-        {
-            //움직임
-            GetMapArea(Piece).Piece.transform.localPosition
-            = new Vector3(moveOrder.ToTile.x, moveOrder.ToTile.y, 0);
-            //좌표지정
-            GetMapArea(Piece).Piece.Coordinate = moveOrder.ToTile;
-            //기존기물 파괴
-            GetMapArea(ToTile).Piece.ObjectDestory();
-            //스크립트교체
-            GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
-            GetMapArea(Piece).Piece = null;
-        }
-        
-    }
+
 
     public List<Vector2Int> PieceCanGoTileCandidate(Vector2Int PieceXY)
     {
-        List<Vector2Int> PieceAbleCoordinate = GetMapArea(PieceXY).Piece.AbleCoordinate;
+        List<Vector2Int> PieceAbleCoordinate = FindArea(PieceXY).piece.AbleCoordinate;
 
         List<Vector2Int> Candidate = new List<Vector2Int>();
         //맵내에서 기물이 이동가능한 위치찾기
@@ -323,7 +207,7 @@ public partial class Map
         {
             Vector2Int xy2 = PieceXY + xy;
             //맵내에 있어야하고 
-            if (xy2.x >= 0&&xy2.x<mapSet.X&& xy2.y >= 0 && xy2.y < mapSet.Y)
+            if (xy2.x >= 0&&xy2.x<mapSet.size.x&& xy2.y >= 0 && xy2.y < mapSet.size.y)
             {
                 ////상대방 기물위치로만 갈 수 있지 자기 기물한텐 가지못하고
                 //if(GetMapArea(xy).Piece.user != me)
@@ -331,7 +215,7 @@ public partial class Map
                 if(!Vector2Int.Equals(xy2,PieceXY))
                 {
                     //거기에 무슨 건물이 있으면 안된다.
-                    if(GetMapArea(xy2).Buliding is null)
+                    if(FindArea(xy2).building is null)
                     {
                         Candidate.Add(xy2);
                     }
@@ -341,18 +225,18 @@ public partial class Map
         //화면에 표시
         foreach(Vector2Int xy in Candidate)
         {
-            GetMapArea(xy).Tile.TileCandidate();
+            FindArea(xy).tile.TileCandidate();
         }
         return Candidate;
     }
 
     public void BeAllTileWhite()
     {
-        foreach(List<MapArea> m in mapArea)
+        for(int i=0;i<mapSet.size.x;i++)
         {
-            foreach(MapArea m2 in m)
+            for (int j = 0;j < mapSet.size.y; j++)
             {
-                m2.Tile.BetileWilte();
+                mapArea.Find(i, j).tile.BetileWilte();
             }
         }
     }
@@ -365,56 +249,54 @@ public partial class Map
 
 
     //멘토링용 임시.
-    public void PieceCreate(PK pkk,Vector2Int xy)
+    public void Create(PK pk,Area area)
     {
-        if (pkk == PK.none)
+        if(ObjectDict.Instance.FindObject(pk,out GameObject obj))
         {
-            if (GetMapArea(xy).Piece is not null) GetMapArea(xy).Piece.ObjectDestory();
-            GetMapArea(xy).Piece = null;
-            return;
+            GameObject newPieceObject = Instantiate(obj);
+            PieceScript newPieceScript = newPieceObject.GetComponent<PieceScript>();
+            if(area.Put(newPieceScript,out PieceScript oldPiece))
+            {
+                oldPiece.ObjectDestory();
+            }
         }
-        if (GetMapArea(xy).Piece is not null)GetMapArea(xy).Piece.ObjectDestory();
-        PieceDictionary.TryGetValue(pkk, out GameObject OriginalPiece);
-        GameObject newPiece= Instantiate(OriginalPiece);
-        //맵아레아에 넣는다.
-        GetMapArea(xy).Piece = newPiece.GetComponent<PieceScript>();
-        //MapObject의 자식으로 만든다.
-        newPiece.transform.parent = mapSet.MapObject.transform;
-        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-        newPiece.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
     }
-    public void TileCreate(TK tkk, Vector2Int xy)
+    public void Create(TK tk, Area area)
     {
-        if (GetMapArea(xy).Tile is not null) GetMapArea(xy).Tile.ObjectDestory();
-        TileDictionnary.TryGetValue(tkk, out GameObject OriginalTile);
-        GameObject newTile = Instantiate(OriginalTile);
-        newTile.GetComponent<TileScript>().coordinate = new Vector2Int(xy.x, xy.y);
-        //맵아레아에 넣는다.
-        GetMapArea(xy).Tile = newTile.GetComponent<TileScript>();
-        //MapObject의 자식으로 만든다.
-        newTile.transform.parent = mapSet.MapObject.transform;
-        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-        newTile.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
-    }
-    public void BuildingCreate(BK bkk,Vector2Int xy)
-    {
-        if(bkk==BK.none)
+        if(ObjectDict.Instance.FindObject(tk,out GameObject obj))
         {
-            if (GetMapArea(xy).Buliding is not null) GetMapArea(xy).Buliding.ObjectDestory();
-            GetMapArea(xy).Buliding = null;
-            return;
+            GameObject newTileObject = Instantiate(obj);
+            TileScript newTileScript = newTileObject.GetComponent<TileScript>();
+            if(area.Put(newTileScript, out TileScript oldtile))
+            {
+                oldtile.ObjectDestory();
+            }
         }
-        if (GetMapArea(xy).Buliding is not null) GetMapArea(xy).Buliding.ObjectDestory();
-        BulidingDeictionary.TryGetValue(bkk, out GameObject OriginalBuilding);
-        GameObject newBuilding = Instantiate(OriginalBuilding);
-        //맵아레아에 넣는다.
-        GetMapArea(xy).Buliding = newBuilding.GetComponent<BuildingScript>();
-        //MapObject의 자식으로 만든다.
-        newBuilding.transform.parent = mapSet.MapObject.transform;
-        //MapObject아래 좌표값으로 배치한다(MainScript의 설정을 따른다)
-        newBuilding.transform.localPosition = new Vector3(xy.x, xy.y, 0) + MainScript.LocalPositionOfPieceOntile;
+    }
+    public void Create(BK bk, Area area)
+    {
+        if(ObjectDict.Instance.FindObject(bk, out GameObject obj))
+        {
+            GameObject newBuildingObject = Instantiate(obj);
+            BuildingScript newBuildingScript = newBuildingObject.GetComponent<BuildingScript>();
+            if(area.Put(newBuildingScript, out BuildingScript oldBuilding))
+            {
+                oldBuilding.ObjectDestory();
+            }
+        }
     }    
-
+    public void Create(IK ik, Area area)
+    {
+        if(ObjectDict.Instance.FindObject(ik,out GameObject obj))
+        {
+            GameObject newItemObject = Instantiate(obj);
+            ItemScript newItemScript = newItemObject.GetComponent<ItemScript>();
+            if(area.Put(newItemScript, out ItemScript oldItem))
+            {
+                oldItem.ObjectDestory();
+            }
+        }
+    }
 }
 
 

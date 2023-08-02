@@ -15,12 +15,6 @@ public enum TK//Tile kind
 public enum PK
 {
     none,
-    King,
-    Queen,
-    Bishop,
-    Knight,
-    Rook,
-    Pawn,
 
     Aking,
     Aknight,
@@ -36,6 +30,7 @@ public enum PK
 }
 public enum IK
 {
+    none,
     Ice
 }
 public enum BK

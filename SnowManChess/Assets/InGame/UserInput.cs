@@ -11,7 +11,6 @@ public partial class UserInput : MonoBehaviour//입력처리
     //-----------------------------------------------------------------------------
     public static UserInput instance;
 
-
     //---------------------------Switch 함수(하위 클래스에서 호출당하는 함수)--------------------------
     Vector2Int EnterTileXY=new Vector2Int();
     public void EnterTileSwitch(Vector2Int _EnterTileXY)
@@ -26,11 +25,10 @@ public partial class UserInput : MonoBehaviour//입력처리
 
  
  
-    public float TouchDecisionTime = GameScript.TouchDecisionTime;
     public float timer = 0;
     HelpCalculation calculation = new HelpCalculation();
-
-    public int StateCherk(out Vector2Int XY)
+    public float TouchDecisionTime = 0.7f;
+    public int StateCherk()
     {
         /*
          * 클릭입력은 나중에 터치입력으로 바꿔야함.
@@ -44,7 +42,6 @@ public partial class UserInput : MonoBehaviour//입력처리
          *  
          *  더블터치는 어떨까.
          */
-        XY = EnterTileXY;
         if (Input.touchCount == 0)//모든 걸 초기화
         {
             //초기화

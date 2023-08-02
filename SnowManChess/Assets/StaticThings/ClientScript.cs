@@ -60,7 +60,7 @@ public partial class ClientScript : MonoBehaviour
 
     void Update()
     {
-        communi.Receive();
+        //communi.Receive();
     }
 }
 public partial class ClientScript//¿Ã¶ó°¡´Â ³ð

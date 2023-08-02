@@ -8,6 +8,13 @@ using UnityEngine;
 public partial class TileScript //지형정의 관련
 {
     public TK kind;
+    public Area area;
+    public Vector2 additionalLocalPositon;
+
+    public void Turn(int turnNumber)
+    {
+
+    }
     /*
      * 위에 기물이 존재할때 데미지.
      * 가속력(배수곱이 아니라 더하기 연산으로.)

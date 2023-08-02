@@ -28,35 +28,36 @@ public class User
     public int point;
 
 }
+
 public class GameLogic
 {
     static GameLogic instance;
-    List<List<MapArea>> mapArea;
+    MapAreas mapArea;
     public static GameLogic GetInstance()
     {
         return instance;
     }
-    public GameLogic(List<List<MapArea>> _mapArea)
+    public GameLogic(MapAreas _mapArea)
     {
         mapArea = _mapArea;
     }
 
-    MapArea GetMapArea(XY xy)
+    Area FindArea(Vector2Int xy)
     {
-        return mapArea[xy.x][xy.y];
+        return mapArea.Find(xy);
     }
     public void PieceMove(Command.PieceMove order)//UserID는 나중에
     {
-        XY Piece = order.piece;
-        XY ToTile = order.ToTile;
+        Vector2Int Piece = XY.TOv2(order.piece);
+        Vector2Int ToTile = XY.TOv2(order.ToTile);
 
         //조건검사1
         bool CanIgo1 = false;
         MonoBehaviour.print(1);
         //갈 수 있는 위치인가 체크
-        foreach(Vector2Int coordinate in GetMapArea(Piece).Piece.AbleCoordinate)
+        foreach (Vector2Int coordinate in FindArea(Piece).piece.AbleCoordinate)
         {
-            if (Vector2Int.Equals(XY.TOv2(ToTile), coordinate+XY.TOv2(Piece)))
+            if (Vector2Int.Equals(ToTile, coordinate + Piece))
             {
                 CanIgo1 = true;
                 break;
@@ -70,57 +71,53 @@ public class GameLogic
          * 2. 호수면
          */
         bool CanIgo2 = true;
-        if (GetMapArea(ToTile).Buliding is not null) if(GetMapArea(ToTile).Buliding.kind == BK.SnowWall)//가려는 자리에 눈벽이있으면
-        {
+        if (FindArea(ToTile).building is not null) if (FindArea(ToTile).building.kind == BK.SnowWall)//가려는 자리에 눈벽이있으면
+            {
                 CanIgo2 = false;
-        }
-        if(GetMapArea(ToTile).Tile.kind==TK.Lake)
+            }
+        if (FindArea(ToTile).tile.kind == TK.Lake)
         {
             PieceDestoroy(Piece);
             return;
         }
         //아직 자타구분 안함.
-        //if (GetMapArea(ToTile).Tile is not null)//가려는 자리에 기물이 있으면
+        //if (FindArea(ToTile).Tile is not null)//가려는 자리에 기물이 있으면
         //{
         //    CanIgo = false;
         //}
         MonoBehaviour.print(3);
         if (CanIgo2 is true)//이동가능
         {
-            if (GetMapArea(ToTile).Piece is null)//가려는 자리에 기물이 없으면
+            if (FindArea(ToTile).piece is null)//가려는 자리에 기물이 없으면
             {
                 //움직임
-                GetMapArea(Piece).Piece.transform.localPosition
+                FindArea(Piece).piece.transform.localPosition
                 = new Vector3(ToTile.x, ToTile.y, 0);
-                //좌표지정
-                GetMapArea(Piece).Piece.Coordinate = XY.TOv2(ToTile);
+
                 //스크립트 교체
-                GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
-                GetMapArea(Piece).Piece = null;
+                FindArea(ToTile).piece = FindArea(Piece).piece;
+                FindArea(Piece).piece = null;
             }
-            else if (GetMapArea(ToTile).Piece is not null)//가려는 자리에 기물이 있으면
+            else if (FindArea(ToTile).piece is not null)//가려는 자리에 기물이 있으면
             {
                 //움직임
-                GetMapArea(Piece).Piece.transform.localPosition
+                FindArea(Piece).piece.transform.localPosition
                 = new Vector3(ToTile.x, ToTile.y, 0);
                 //좌표지정
-                GetMapArea(Piece).Piece.Coordinate = XY.TOv2(ToTile);
+
                 //기존기물 파괴
                 PieceDestoroy(ToTile);
                 //스크립트교체
-                GetMapArea(ToTile).Piece = GetMapArea(Piece).Piece;
-                GetMapArea(Piece).Piece = null;
+                FindArea(ToTile).piece = FindArea(Piece).piece;
+                FindArea(Piece).piece = null;
             }
         }
 
     }
-    void PieceDestoroy(XY xy)
+    void PieceDestoroy(Vector2Int xy)
     {
-        if(GetMapArea(xy).Piece.Kind==PK.King)//패배
-        {
-
-        }
-        GetMapArea(xy).Piece.ObjectDestory();
-        GetMapArea(xy).Piece = null;
+     //패배 조건 넣기
+        FindArea(xy).piece.ObjectDestory();
+        FindArea(xy).piece = null;
     }
 }
