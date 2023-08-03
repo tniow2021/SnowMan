@@ -7,6 +7,7 @@ public partial class PieceScript : MonoBehaviour //기물정의
     public Map map1;
     public Area area;
     public PK kind;
+    public User user;
 
     public Vector2 additionalLocalPositon;
     public void Turn(int turnNumber)

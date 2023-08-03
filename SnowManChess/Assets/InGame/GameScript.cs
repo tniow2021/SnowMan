@@ -39,13 +39,25 @@ public partial class GameScript : MonoBehaviour
 
 
     public Map map;
+
+    UserManager userManager = new UserManager();
+    User user1 = new User(UserKind.general, 1, "damyeong");
+    User user2 = new User(UserKind.general, 2, "dongmin");
+
     void Start()
     {
-        
         instance = this.gameObject.GetComponent<GameScript>();
+
+        userManager.Add(user1);
+        userManager.Add(user2);
         MapSet mapSet1 = new MapSet()
         {
             size = new Vector2Int(9, 9),
+            PieceSet = new (PK, Vector2Int, User)[]
+            {
+                (PK.Aking, new Vector2Int(4, 0), user1),
+                (PK.Bking, new Vector2Int(4, 8), user2)
+            },
             TileSet = new TK[,]
             {
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
@@ -57,30 +69,6 @@ public partial class GameScript : MonoBehaviour
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow}
-            },
-            PieceSet = new PK[,]
-            {
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none },
-                {PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none,PK.none }
-            },
-            BulidngSet = new BK[,]
-            {
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
-                {BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none,BK.none },
             },
             ItemSet=new IK[,]
             {
@@ -94,37 +82,23 @@ public partial class GameScript : MonoBehaviour
                 {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
                 {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none }
             }
-            
-
         };
         map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
 
     }
 }
-public class MoveOrder
-{
-    public Vector2Int Piece;
-    public Vector2Int ToTile;
-}
-
 public enum InputMode
 {
     Pick,
     Put,//이동할장소를  지정
     Route,
-    Disposition//임시. 멘토링용. 기물선택자.
+    Disposition//기물선택자.
 }
-
 public partial class GameScript
 {
 
-    //입력관련
-
- 
     public CameraScript cameraScript;
-    public List<Vector2Int> RouteList = new List<Vector2Int>();
-
     public InputMode inputMode = InputMode.Pick;
     void BeFixedCamera(InputMode mode)
     {
@@ -151,19 +125,6 @@ public partial class GameScript
         }
 
     }
-    void AreaPick(Area Area)
-    {
-
-    }
-    void AreaPut(Area Area)
-    {
-
-    }
-    //void AreaRoute(Area area)
-    //{
-
-    //}
-
     Order.PieceMove pieceMove = new Order.PieceMove();
     private void Update()
     {
@@ -242,12 +203,12 @@ public partial class GameScript
                     map.BeAllTileWhite();
                     if (testScript.젠장 == 하.건물)
                     {
-                        map.Create(bkk, area);
+                        map.Create(bkk, user1,area);
                         inputMode = InputMode.Pick;
                     }
                     if (testScript.젠장 == 하.기물)
                     {
-                        map.Create(Pkk, area);
+                        map.Create(Pkk,user2, area);
                         inputMode = InputMode.Pick;
                     }
                     if (testScript.젠장 == 하.타일)

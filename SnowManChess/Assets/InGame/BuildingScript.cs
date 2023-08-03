@@ -8,6 +8,7 @@ public class BuildingScript : MonoBehaviour
     public Map map1;
     public Vector2 additionalLocalPositon;
     public Area area;
+    public User user;
     public void Turn(int turnNumber)
     {
 

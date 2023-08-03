@@ -1,3 +1,10 @@
+public enum UserKind
+{
+    admin,
+    general
+}
+
+
 public enum InputStateKind
 {
     StandBy,
