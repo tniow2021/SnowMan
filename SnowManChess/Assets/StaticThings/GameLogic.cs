@@ -28,15 +28,109 @@ public class User
     public int point;
 
 }
-public class GameLogic
+public partial class GameLogic
 {
-    public void PieceMove()
+    MapAreas mapAreas;
+    public GameLogic(MapAreas _mapAreas)
     {
-
+        mapAreas = _mapAreas;
+    }
+    //게임스크립트에서 Order를 받는 함수
+    public bool PieceMove(Order.PieceMove order)
+    {
+        List<Vector2Int> canGoXyList = AreaListOfItCanDo(order.piece);
+        MonoBehaviour.print(canGoXyList);
+        MonoBehaviour.print(order.piece.area.xy);
+        if (canGoXyList.Exists(x=>Equals(x,order.toArea.xy)))
+        {
+            PieceAction(order);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    //게임스크립트에서 호출되는 public void형 함수와
-    //게임로직처리를 위한 privite Order 형함수로 나누기?
+    //
+    public void DisplayAreaThatItCanDo(PieceScript piece)
+    {
+        List<Vector2Int> canGoXyList;
+        canGoXyList = AreaListOfItCanDo(piece);
+        foreach(Vector2Int xy in canGoXyList)
+        {
+            mapAreas.Find(xy).tile.TileCandidate();
+        }
+    }
+    List<Vector2Int> AreaListOfItCanDo(PieceScript piece)
+    {
+        List<Vector2Int> canGoXyList = new List<Vector2Int>();
+        foreach (Vector2Int xy in piece.AbleCoordinate)
+        {
+            //갈 수  절대위치=기물의 현재위치+ 갈 수 있는 상대위치
+            Vector2Int AbleXY = piece.area.xy + xy;
+            if(IsXyInsideTheMapArea(AbleXY))//좌표체크
+            {
+                if (Absolute_check(piece, AbleXY))
+                {
+                    if (Relative_cherk(piece, AbleXY))
+                    {
+                        canGoXyList.Add(AbleXY);
+                    }
+                }
+            }
+        }
+        //반환
+        return canGoXyList;
+    }
+    bool Absolute_check(PieceScript piece,Vector2Int toAreaXy)//(절대설정)
+    {
+        //(구현중)상대방 기물위치로만 갈 수 있지 자기나 자기 기물한텐 가지못하고,
+        //자기위치는 안되고.
+        if(piece.area==mapAreas.Find(toAreaXy))
+        {
+            return false;
+        }    
+        return true;
+    }
+    //앞으로 복잡해질 함수
+    bool Relative_cherk(PieceScript piece, Vector2Int toAreaXy)//(상대설정)
+    {
+        //가려는 자리에 건물이 있으면 안된다.
+        if (mapAreas.Find(toAreaXy).building is not null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    bool IsXyInsideTheMapArea(Vector2Int xy)
+    {
+        if (xy.x < 0 || xy.x >= mapAreas.size.x
+            || xy.y < 0 || xy.y >= mapAreas.size.y)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+}
+public partial class GameLogic//내부처리 로직
+{
+    void PieceAction(Order.PieceMove order)
+    {
+        if(order.piece.area.Pick(out PieceScript piece))
+        {
+            if (order.toArea.Put(piece, out PieceScript outPiece))
+            {
+                //이부분은 따로 처리할 것.
+                MonoBehaviour.Destroy(outPiece.gameObject);
+            }
+        }
+    }
 }
 
 //public class GameLogic

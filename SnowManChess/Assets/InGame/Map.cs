@@ -65,14 +65,18 @@ public class MapSet
 public class MapAreas
 {
     //생성
-    List<List<Area>> areas=new List<List<Area>>();
-    int xSize;
-    int ySize;
+    List<List<Area>> areas = new List<List<Area>>();
+
+    public Vector2Int size
+    {
+        get { return sizeXy; }
+    }
+    Vector2Int sizeXy = new Vector2Int();
     public MapAreas(Map map,Vector2Int mapSize)
     {
         areas = new List<List<Area>>();
-        xSize = mapSize.x;
-        ySize = mapSize.y;
+        sizeXy.x = mapSize.x;
+        sizeXy.y = mapSize.y;
         for(int i=0; i< mapSize.x;i++)
         {
             List<Area> row = new List<Area>();
@@ -179,8 +183,8 @@ public class MapAreas
     //메소드
     public bool Insert(Vector2Int Index,Area area)
     {
-        if (Index.x > xSize - 1 || Index.x < 0) return false;
-        else if (Index.y > ySize - 1 || Index.y < 0) return false;
+        if (Index.x > sizeXy.x - 1 || Index.x < 0) return false;
+        else if (Index.y > sizeXy.y - 1 || Index.y < 0) return false;
 
         areas[Index.x][Index.y] = area;
         return true;
@@ -196,9 +200,9 @@ public class MapAreas
 
     public void Turn(int turnNumber)
     {
-        for(int i=0;i<xSize;i++)
+        for(int i=0;i< sizeXy.x; i++)
         {
-            for(int j=0;j<ySize;j++)
+            for(int j=0;j< sizeXy.y;j++)
             {
                 areas[i][j].tile.Turn(turnNumber);
                 areas[i][j].piece.Turn(turnNumber);
@@ -317,15 +321,7 @@ public partial class Map
             }
         }
     }
-    //기물이동(좌표,좌펴)
 
-    //온난화짐행();
-
-
-
-
-
-    //멘토링용 임시.
     public void Create(PK pk,Area area)
     {
         if(ObjectDict.Instance.FindObject(pk,out GameObject obj))

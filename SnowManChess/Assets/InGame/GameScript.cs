@@ -36,8 +36,7 @@ public partial class GameScript : MonoBehaviour
 
     GameLogic Logic;
 
-    public User user1=new User("Damyeong", 30, 19);//임시로
-    User user2 = new User("Dongmin", 30, 18);
+
 
     public Map map;
     void Start()
@@ -99,7 +98,7 @@ public partial class GameScript : MonoBehaviour
 
         };
         map.MapCreate(mapSet1);
-        //Logic = new GameLogic(map.mapArea);
+        Logic = new GameLogic(map.mapArea);
 
     }
 }
@@ -152,10 +151,6 @@ public partial class GameScript
         }
 
     }
-    List<Vector2Int> Candidate;//map.PieceCanGoTileCandidate(EnterXy);에게 반환받는다. 기물이 이동할 수 있는 타일위치리스트
-    
-    
- 
     void AreaPick(Area Area)
     {
 
@@ -180,15 +175,11 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                if(map.mapArea.GetAreaTouched(out TileScript tile))//삭제
-                {
-                    tile.TileTouch();
-                }
                 if (map.mapArea.GetAreaTouched(out PieceScript piece))//터치한 타일에 기물이 있어야 
                 {
                     pieceMove.piece = piece;
+                    Logic.DisplayAreaThatItCanDo(piece);
                     inputMode = InputMode.Put;
-                    //Candidate = map.PieceCanGoTileCandidate(EnterXY);
                 } 
             }
             else if (state == InputStateKind.LongTouch)
@@ -200,20 +191,24 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                if(map.mapArea.GetAreaTouched(out Area area))
+                
+                if (map.mapArea.GetAreaTouched(out Area area))
                 {
-                    if (pieceMove.piece.area != area)//선택한 자리와 놓는 자리가달라야함
+                    pieceMove.toArea = area;
+                    area.tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                    //기물움직이기. true면 성공, false면 실패
+                    if (Logic.PieceMove(pieceMove))
                     {
-                        pieceMove.toArea = area;
-                        //Logic.PieceMove(pieceMove);
-
-                        map.BeAllTileWhite();
-                        area.tile.GetComponent<SpriteRenderer>().color = Color.blue;
-
-                        inputMode = InputMode.Pick;
+                        print("기물움직이기 성공!");
                     }
+                    else
+                    {
+                        print("기물움직이기 실패!");
+                    }
+                    map.BeAllTileWhite();
+                    inputMode = InputMode.Pick;
                 }
-                else//같은 타일을 두번 터치하면
+                else//area가 없으면(아마 이런일은 없겠지만.)
                 {
                     inputMode = InputMode.Pick;//다시 처음으로
                 }

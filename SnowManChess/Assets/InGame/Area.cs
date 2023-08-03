@@ -20,6 +20,7 @@ public class Area : MonoBehaviour
         if (Input.touchCount == 1)
         {
             BeMouseOnArea = true;
+            if (mapAreas is null) print($"{xy}공습경보공습경보오오");
             mapAreas.AreaEnteredEvent(this);
         }
     }
@@ -79,9 +80,90 @@ public class Area : MonoBehaviour
             return false;
         }
     }
+    /// <summary>
+    /// 요소가 존재하면 out으로 내보낸뒤 true를 반환하고
+    /// 기존 참조는 지웁니다. 한마디로 뽑습니다.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    public bool Pick(out TileScript element)
+    {
+        if(tile is not null)
+        {
+            element = tile;
+            tile = null;
+            return true;
+        }
+        else
+        {
+            element = null;
+            return false;
+        }
+    }
+    /// <summary>
+    /// 요소가 존재하면 out으로 내보낸뒤 true를 반환하고
+    /// 기존 참조는 지웁니다. 한마디로 뽑습니다.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    public bool Pick(out PieceScript element)
+    {
+        if (piece is not null)
+        {
+            element = piece;
+            piece = null;
+            return true;
+        }
+        else
+        {
+            element = null;
+            return false;
+        }
+    }
+    /// <summary>
+    /// 요소가 존재하면 out으로 내보낸뒤 true를 반환하고
+    /// 기존 참조는 지웁니다. 한마디로 뽑습니다.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    public bool Pick(out ItemScript element)
+    {
+        if (item is not null)
+        {
+            element = item;
+            item = null;
+            return true;
+        }
+        else
+        {
+            element = null;
+            return false;
+        }
+    }
+    /// <summary>
+    /// 요소가 존재하면 out으로 내보낸뒤 true를 반환하고
+    /// 기존 참조는 지웁니다. 한마디로 뽑습니다.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    public bool Pick(out BuildingScript element)
+    {
+        if (building is not null)
+        {
+            element = building;
+            building = null;
+            return true;
+        }
+        else
+        {
+            element = null;
+            return false;
+        }
+    }
 
     /// <summary>
-    /// 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
+    /// 매게변수로 받은 요소를 집어넣습니다. 요소의 원래 아레아엔 참조가 남아있습니다
+    /// 옮길 위치에 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
     /// </summary>
     /// <param name="_tile"></param>
     /// <param name="old"></param>
@@ -105,7 +187,8 @@ public class Area : MonoBehaviour
         }
     }
     /// <summary>
-    /// 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
+    /// 매게변수로 받은 요소를 집어넣습니다. 요소의 원래 아레아엔 참조가 남아있습니다
+    /// 옮길 위치에 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
     /// </summary>
     /// <param name="_tile"></param>
     /// <param name="old"></param>
@@ -130,7 +213,8 @@ public class Area : MonoBehaviour
         }
     }
     /// <summary>
-    /// 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
+    /// 매게변수로 받은 요소를 집어넣습니다. 요소의 원래 아레아엔 참조가 남아있습니다
+    /// 옮길 위치에 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
     /// </summary>
     /// <param name="_tile"></param>
     /// <param name="old"></param>
@@ -154,7 +238,8 @@ public class Area : MonoBehaviour
         }
     }
     /// <summary>
-    /// 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
+    /// 매게변수로 받은 요소를 집어넣습니다. 요소의 원래 아레아엔 참조가 남아있습니다
+    /// 옮길 위치에 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
     /// </summary>
     /// <param name="_tile"></param>
     /// <param name="old"></param>

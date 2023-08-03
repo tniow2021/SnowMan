@@ -8,6 +8,12 @@ public class Order
     {
         public PieceScript piece;
         public Area toArea;
+        public void Clear()
+        {
+            piece = null;
+            toArea = null;
+        }
     }
+    
 
 }
