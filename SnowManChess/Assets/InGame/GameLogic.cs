@@ -2,32 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserManager
-{
-    public User admin = new User(UserKind.admin, 0);
-    List<User> Users = new List<User>();
-    public void Add(User user)
-    {
-        Users.Add(user);
-    }
-    public int Count()
-    {
-        return Users.Count;
-    }
-}
-public class User
-{
-    public User(UserKind _kind,int _ID,string _name="")
-    {
-        name = _name;
-        ID = _ID;
-        kind = _kind;
-    }
-    public UserKind kind { get; }
-    public int ID { get; }
-    public string name { get; }
 
-}
 public partial class GameLogic
 {
     MapAreas mapAreas;

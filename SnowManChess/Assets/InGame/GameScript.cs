@@ -2,61 +2,92 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+public class UserManager
+{
+    public User admin = new User(UserKind.admin, 0);
+    List<User> users = new List<User>();
 
+    List<User> orderList = new List<User>();//Order 는 서수란 뜻
+    int CurrentOrdinal = 0;
+    public UserManager()
+    {
+        users.Add(admin);
+    }
+    public void Add(User user)
+    {
+        //count값 덕분에 들어온 순서대로 아이디가 매겨진다.
+        users.Add(user);
+    }
+    public void OrdinalAdd(User user)
+    {
+        orderList.Add(user);
+    }
+    public bool GetThisTurn(out User user)//널오류가 뜨지않게 조심해서 쓰기
+    {
+        if(orderList.Count>0)
+        {
+            user = orderList[CurrentOrdinal];
+            return true;
+        }
+        else
+        {
+            user = null;
+            return false;
+        }
+        
+    }
+    public void TurnChange(User user)
+    {
+        CurrentOrdinal = orderList.IndexOf(user);
+        //CurrentOrdinal++;
+        //if(CurrentOrdinal>=orderList.Count)
+        //{
+        //    CurrentOrdinal = 0;//다시처음으로.
+        //}
+    }
+    public int Count()
+    {
+        return users.Count;
+    }
+}
 public partial class GameScript : MonoBehaviour
 {
-
-    /*
-     * 게임시작시에만 필요한 정보
-     * :체스판 크기, 타일별 정보들(지형, 자원)
-     * 실시간 통신정보(변경된 것만 통신, 주기적으로 전체를 검사)
-     * :
-     * 기물 이동
-     * 타일정보 변경내역
-     * 
-     * 
-     * 만들어야할 것 단계적 계획
-     * :
-     * clinet script를 허브로 하는 문자열 통신.
-     * 기물이동 동기화
-     * 시작시통신데이터, 실시간 데이터 구조체 짜기
-     * client script작성
-     * 잠재적 턴교환과 마스킹 구현
-     * 서버작성
-     * 
-     * 드래그 이동경로설정
-     * 핑(오브젝트움직임의 최소단위 구현. 한 50ms로)
-     */
     public static GameScript instance;
     private void Awake()
     {
         UserInput.instance = GetComponent<UserInput>();
-
     }
 
     GameLogic Logic;
-
-
-
     public Map map;
-
-    UserManager userManager = new UserManager();
-    User user1 = new User(UserKind.general, 1, "damyeong");
-    User user2 = new User(UserKind.general, 2, "dongmin");
-
+    public UserManager userManager = new UserManager();
+    public TurnButten turnButten1;
+    public TurnButten turnButten2;
     void Start()
     {
         instance = this.gameObject.GetComponent<GameScript>();
 
+        User user1 = new User(UserKind.general, 1);
+        User user2 = new User(UserKind.general, 2);
         userManager.Add(user1);
         userManager.Add(user2);
+
+        //일단 순서는 user1,user2로.
+        userManager.OrdinalAdd(user1);
+        userManager.OrdinalAdd(user2);
+
+        turnButten1.user = user1;
+        turnButten2.user = user2;
+
+        User topUser = user2;
+        User bottomUser = user1;
         MapSet mapSet1 = new MapSet()
         {
             size = new Vector2Int(9, 9),
             PieceSet = new (PK, Vector2Int, User)[]
             {
-                (PK.Aking, new Vector2Int(4, 0), user1),
-                (PK.Bking, new Vector2Int(4, 8), user2)
+                (PK.Bking, new Vector2Int(4, 8), topUser),
+                (PK.Aking, new Vector2Int(4, 0), bottomUser)
             },
             TileSet = new TK[,]
             {
@@ -85,7 +116,6 @@ public partial class GameScript : MonoBehaviour
         };
         map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
-
     }
 }
 public enum InputMode
@@ -97,7 +127,6 @@ public enum InputMode
 }
 public partial class GameScript
 {
-
     public CameraScript cameraScript;
     public InputMode inputMode = InputMode.Pick;
     void BeFixedCamera(InputMode mode)
@@ -128,10 +157,21 @@ public partial class GameScript
     Order.PieceMove pieceMove = new Order.PieceMove();
     private void Update()
     {
-         
-        InputStateKind state=UserInput.instance.StateCherk();
-
-
+        //오더 횟수계산하는거 만들어야한다.
+        if(userManager.GetThisTurn(out User user))
+        {
+            print(user.ID);
+            InputStateKind state=UserInput.instance.StateCherk();
+            GameHandling(state,user);
+            BeFixedCamera(inputMode);
+        }
+        else
+        {
+            print("젠장!");
+        }
+    }
+    void GameHandling(InputStateKind state,User user)
+    {
         if (inputMode == InputMode.Pick)
         {
             if (state == InputStateKind.Touch)
@@ -141,7 +181,7 @@ public partial class GameScript
                     pieceMove.piece = piece;
                     Logic.DisplayAreaThatItCanDo(piece);
                     inputMode = InputMode.Put;
-                } 
+                }
             }
             else if (state == InputStateKind.LongTouch)
             {
@@ -152,7 +192,7 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                
+
                 if (map.mapArea.GetAreaTouched(out Area area))
                 {
                     pieceMove.toArea = area;
@@ -184,12 +224,12 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                if(map.mapArea.GetAreaTouched(out Area area))
+                if (map.mapArea.GetAreaTouched(out Area area))
                 {
                     area.tile.TileDrag();
                 }
             }
-            else if(state == InputStateKind.Ended)
+            else if (state == InputStateKind.Ended)
             {
                 inputMode = InputMode.Pick;
             }
@@ -198,17 +238,17 @@ public partial class GameScript
         {
             if (state == InputStateKind.Touch)
             {
-                if(map.mapArea.GetAreaTouched(out Area area))
+                if (map.mapArea.GetAreaTouched(out Area area))
                 {
                     map.BeAllTileWhite();
                     if (testScript.젠장 == 하.건물)
                     {
-                        map.Create(bkk, user1,area);
+                        map.Create(bkk, user, area);
                         inputMode = InputMode.Pick;
                     }
                     if (testScript.젠장 == 하.기물)
                     {
-                        map.Create(Pkk,user2, area);
+                        map.Create(Pkk, user, area);
                         inputMode = InputMode.Pick;
                     }
                     if (testScript.젠장 == 하.타일)
@@ -219,7 +259,6 @@ public partial class GameScript
                 }
             }
         }
-        BeFixedCamera(inputMode);
     }
 }
 
@@ -244,23 +283,5 @@ public partial class GameScript//커스텀 기물-건물-타일 배치
         inputMode = InputMode.Disposition;
     }
 }
-
-
-public partial class GameScript //서버로 올라가는 길
-{
-
-}
-public partial class GameScript //Map으로 내려가는 길
-{
- 
-}
-public partial class GameScript //사전 설정
-{
-
-
-
-}
-
-
 
 
