@@ -277,40 +277,6 @@ public partial class Map//내려가는 길
 public partial class Map
 {   
 
-
-    public List<Vector2Int> PieceCanGoTileCandidate(Vector2Int PieceXY)
-    {
-        List<Vector2Int> PieceAbleCoordinate = FindArea(PieceXY).piece.AbleCoordinate;
-
-        List<Vector2Int> Candidate = new List<Vector2Int>();
-        //맵내에서 기물이 이동가능한 위치찾기
-        foreach(Vector2Int xy in PieceAbleCoordinate)
-        {
-            Vector2Int xy2 = PieceXY + xy;
-            //맵내에 있어야하고 
-            if (xy2.x >= 0&&xy2.x<mapSet.size.x&& xy2.y >= 0 && xy2.y < mapSet.size.y)
-            {
-                ////상대방 기물위치로만 갈 수 있지 자기 기물한텐 가지못하고
-                //if(GetMapArea(xy).Piece.user != me)
-                //자기위치는 안되고.
-                if(!Vector2Int.Equals(xy2,PieceXY))
-                {
-                    //거기에 무슨 건물이 있으면 안된다.
-                    if(FindArea(xy2).building is null)
-                    {
-                        Candidate.Add(xy2);
-                    }
-                }
-            }
-        }
-        //화면에 표시
-        foreach(Vector2Int xy in Candidate)
-        {
-            FindArea(xy).tile.TileCandidate();
-        }
-        return Candidate;
-    }
-
     public void BeAllTileWhite()
     {
         for(int i=0;i<mapSet.size.x;i++)

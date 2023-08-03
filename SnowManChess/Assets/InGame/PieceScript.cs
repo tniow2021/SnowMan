@@ -19,15 +19,24 @@ public partial class PieceScript : MonoBehaviour //기물정의
     public int speed;
 
     //이동특성정의
-    public List<Vector2Int> AbleCoordinate= new List<Vector2Int>();
-    public List<List<Vector2Int>> AbleCoordinate2 = new List<List<Vector2Int>>();
-    /*
-     * (0,0)을 현재 기물이위치한 곳이라 할 때 
-     * 이동가능한 좌표
-     * ex:
-     * new Vector2Int(0,1), //앞
-     * new Vector2Int(1,1), //앞에서 왼쪽으로 한칸
-     * new Vector2Int(-1,1) //앞에서 오른쪽으로 한칸
+    public List<Vector2Int> AbleRoute= new List<Vector2Int>();
+    /* 
+     * 일종의 경로의 방향표시를 해놓는다
+     * 0,0이라 치면 원점으로 돌아간다.
+     * 
+     * 예시:위아래좌우로 2칸씩 뻗은 이동가능경로
+     * 1,0
+     * 2,0
+     * 0,0
+     * -1,0
+     * -2,0
+     * 0,0
+     * 0,1
+     * 0,2
+     * 0,0
+     * 0,-1
+     * 0,-2
+     * 
      */
     public Animator animator;
 

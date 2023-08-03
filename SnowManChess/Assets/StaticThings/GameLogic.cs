@@ -64,24 +64,50 @@ public partial class GameLogic
     }
     List<Vector2Int> AreaListOfItCanDo(PieceScript piece)
     {
-        List<Vector2Int> canGoXyList = new List<Vector2Int>();
-        foreach (Vector2Int xy in piece.AbleCoordinate)
+        //piece.AbleRoute를 (0,0)을 기준으로 잘라 2차원 리스트에 저장한다.
+        List<List<Vector2Int>> canRouteList = new List<List<Vector2Int>>();
+        List<Vector2Int> tempRoute = new List<Vector2Int>();
+        for (int i=0;i< piece.AbleRoute.Count;i++)
         {
-            //갈 수  절대위치=기물의 현재위치+ 갈 수 있는 상대위치
-            Vector2Int AbleXY = piece.area.xy + xy;
-            if(IsXyInsideTheMapArea(AbleXY))//좌표체크
+            if (Equals(piece.AbleRoute[i],new Vector2Int(0,0)))
             {
-                if (Absolute_check(piece, AbleXY))
-                {
-                    if (Relative_cherk(piece, AbleXY))
-                    {
-                        canGoXyList.Add(AbleXY);
-                    }
-                }
+                canRouteList.Add(tempRoute);
+                tempRoute = new List<Vector2Int>();
+            }
+            else
+            {
+                tempRoute.Add(piece.AbleRoute[i]);
             }
         }
+        //그 2차원리스트에서 1차원리스트를 하나씩 꺼낸다음에 
+        //체크하고 넣는데, 체크에서 탈락하면 1차원리스트를 바꾼다.
+        //즉 일종의 갈 수 있는 모든 길을 표시하는 알고리즘
+
+        List<Vector2Int> returnList = new List<Vector2Int>();
+        foreach (List<Vector2Int> route in canRouteList)
+        {
+            foreach(Vector2Int xy in route)
+            {
+                //갈 수  절대위치=기물의 현재위치+ 갈 수 있는 상대위치
+                Vector2Int CanGoXY = piece.area.xy + xy;
+                if (
+                    IsXyInsideTheMapArea(CanGoXY)
+                    &&Absolute_check(piece, CanGoXY)
+                    &&Relative_cherk(piece, CanGoXY)
+                    )
+                {
+                    returnList.Add(CanGoXY);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+        }
+
         //반환
-        return canGoXyList;
+        return returnList;
     }
     bool Absolute_check(PieceScript piece,Vector2Int toAreaXy)//(절대설정)
     {

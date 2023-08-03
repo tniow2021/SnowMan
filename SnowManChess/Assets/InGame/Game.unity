@@ -224,13 +224,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10402761}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.3903592, y: 1.2922608, z: -0.017646858}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_Father: {fileID: 1276412777}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &25952510
 GameObject:
@@ -465,19 +465,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: -1, y: 2}
-  - {x: 1, y: 2}
-  - {x: -1, y: -2}
-  - {x: 1, y: -2}
-  - {x: 2, y: -1}
-  - {x: 2, y: 1}
-  - {x: -2, y: -1}
-  - {x: -2, y: 1}
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: -1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &70325417
 GameObject:
@@ -862,15 +850,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 1}
-  - {x: 2, y: 2}
-  - {x: -1, y: 1}
-  - {x: -2, y: 2}
-  - {x: 1, y: -1}
-  - {x: 2, y: -2}
-  - {x: -1, y: -1}
-  - {x: -2, y: -2}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &224128045
 GameObject:
@@ -2629,15 +2609,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 0}
-  - {x: 2, y: 0}
-  - {x: -1, y: 0}
-  - {x: -2, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: 2}
-  - {x: 0, y: -1}
-  - {x: 0, y: -2}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &764870426
 GameObject:
@@ -2945,11 +2917,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: 0, y: -1}
-  - {x: 0, y: 1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &924903930
 GameObject:
@@ -3056,15 +3024,19 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 0}
-  - {x: 2, y: 0}
-  - {x: -1, y: 0}
-  - {x: -2, y: 0}
+  AbleRoute:
   - {x: 0, y: 1}
   - {x: 0, y: 2}
+  - {x: 0, y: 0}
   - {x: 0, y: -1}
   - {x: 0, y: -2}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  - {x: 0, y: 0}
+  - {x: -1, y: 0}
+  - {x: -2, y: 0}
+  - {x: 0, y: 0}
   animator: {fileID: 0}
 --- !u!1 &926470649
 GameObject:
@@ -3171,15 +3143,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 1}
-  - {x: 2, y: 2}
-  - {x: -1, y: 1}
-  - {x: -2, y: 2}
-  - {x: 1, y: -1}
-  - {x: 2, y: -2}
-  - {x: -1, y: -1}
-  - {x: -2, y: -2}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &931115798
 GameObject:
@@ -3286,19 +3250,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: -1, y: 2}
-  - {x: 1, y: 2}
-  - {x: -1, y: -2}
-  - {x: 1, y: -2}
-  - {x: 2, y: -1}
-  - {x: 2, y: 1}
-  - {x: -2, y: -1}
-  - {x: -2, y: 1}
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: -1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &934667258
 GameObject:
@@ -3410,7 +3362,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1012043008
 GameObject:
@@ -3779,11 +3731,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: -1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &1254829101
 GameObject:
@@ -3876,7 +3824,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1276412777
 Transform:
   m_ObjectHideFlags: 0
@@ -3888,7 +3836,8 @@ Transform:
   m_LocalPosition: {x: 2.3903592, y: 1.2922608, z: -0.017646858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 10402764}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4161,10 +4110,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 1}
-  - {x: -1, y: 1}
-  - {x: 0, y: -1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &1436403644
 GameObject:
@@ -5749,10 +5695,7 @@ MonoBehaviour:
   AttackDistance: 0
   HP: 0
   speed: 0
-  AbleCoordinate:
-  - {x: 1, y: 1}
-  - {x: -1, y: 1}
-  - {x: 0, y: -1}
+  AbleRoute: []
   animator: {fileID: 0}
 --- !u!1 &2124372949
 GameObject:
