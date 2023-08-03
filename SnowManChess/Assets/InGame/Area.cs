@@ -20,14 +20,66 @@ public class Area : MonoBehaviour
         if (Input.touchCount == 1)
         {
             BeMouseOnArea = true;
-            mapAreas.EnterXySwitch(xy);
+            mapAreas.AreaEnteredEvent(this);
         }
     }
     void OnMouseExit()
     {
         BeMouseOnArea = false;
     }
-    
+    public bool Get(out PieceScript OutpieceScript)
+    {
+        if(piece is not null)
+        {
+            OutpieceScript = piece;
+            return true;
+        }
+        else
+        {
+            OutpieceScript = null;
+            return false;
+        }
+    }
+    public bool Get(out TileScript OutTileScript)
+    {
+        if (tile is not null)
+        {
+            OutTileScript = tile;
+            return true;
+        }
+        else
+        {
+            OutTileScript = null;
+            return false;
+        }
+    }
+    public bool Get(out BuildingScript OutBuildingScript)
+    {
+        if (building is not null)
+        {
+            OutBuildingScript = building;
+            return true;
+        }
+        else
+        {
+            OutBuildingScript = null;
+            return false;
+        }
+    }
+    public bool Get(out ItemScript OutItemScript)
+    {
+        if (item is not null)
+        {
+            OutItemScript = item;
+            return true;
+        }
+        else
+        {
+            OutItemScript = null;
+            return false;
+        }
+    }
+
     /// <summary>
     /// 기존 요소가 이미 존재하면 true를 반환하고 해당요소를 out합니다.
     /// </summary>

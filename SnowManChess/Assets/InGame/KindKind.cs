@@ -1,9 +1,9 @@
-public static class InputStateKind
+public enum InputStateKind
 {
-    public const int StandBy = 0;
-    public const int Touch = 1;
-    public const int LongTouch = 2;
-    public const int Ended = 3;
+    StandBy,
+    Touch,
+    LongTouch,
+    Ended
 }
 public enum TK//Tile kind
 {

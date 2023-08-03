@@ -64,7 +64,7 @@ public class MapSet
 }
 public class MapAreas
 {
-
+    //생성
     List<List<Area>> areas=new List<List<Area>>();
     int xSize;
     int ySize;
@@ -89,16 +89,92 @@ public class MapAreas
             areas.Add(row);
         }
     }
+
+    //행동
     //게임스크립트로 가는놈
-    public (Vector2Int,bool,Area ) TouchCherk()
+    Area areaEntered;
+    public void AreaEnteredEvent(Area _area)
     {
-        return (EnterXY, Find(EnterXY).BeMouseOnArea, Find(EnterXY));
+        areaEntered = _area;
     }
-    Vector2Int EnterXY;
-    public void EnterXySwitch(Vector2Int xy)
+    public bool GetAreaTouched(out PieceScript outpieceScript)
     {
-        EnterXY = xy;
+        if(areaEntered is not null)
+        {
+            if(areaEntered.BeMouseOnArea is true)
+            {
+                if(areaEntered.Get(out PieceScript piece))
+                {
+                    outpieceScript = piece;
+                    return true;
+                }
+            }
+        }
+        outpieceScript = null;
+        return false;
     }
+    public bool GetAreaTouched(out TileScript outTileScript)
+    {
+        if (areaEntered is not null)
+        {
+            if (areaEntered.BeMouseOnArea is true)
+            {
+                if (areaEntered.Get(out TileScript tile))
+                {
+                    outTileScript = tile;
+                    return true;
+                }
+            }
+        }
+        outTileScript = null;
+        return false;
+    }
+    public bool GetAreaTouched(out BuildingScript outBuildingScript)
+    {
+        if (areaEntered is not null)
+        {
+            if (areaEntered.BeMouseOnArea is true)
+            {
+                if (areaEntered.Get(out BuildingScript building))
+                {
+                    outBuildingScript = building;
+                    return true;
+                }
+            }
+        }
+        outBuildingScript = null;
+        return false;
+    }
+    public bool GetAreaTouched(out ItemScript outItemScript)
+    {
+        if (areaEntered is not null)
+        {
+            if (areaEntered.BeMouseOnArea is true)
+            {
+                if (areaEntered.Get(out ItemScript item))
+                {
+                    outItemScript = item;
+                    return true;
+                }
+            }
+        }
+        outItemScript = null;
+        return false;
+    }
+    public bool GetAreaTouched(out Area outArea)
+    {
+        if (areaEntered is not null)
+        {
+            if (areaEntered.BeMouseOnArea is true)
+            {
+                outArea = areaEntered;
+                return true;
+            }
+        }
+        outArea = null;
+        return false;
+    }
+
 
     //메소드
     public bool Insert(Vector2Int Index,Area area)
@@ -131,6 +207,7 @@ public class MapAreas
             }
         }
     }
+
 }
 
 public partial class Map : MonoBehaviour

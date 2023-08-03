@@ -28,7 +28,7 @@ public partial class UserInput : MonoBehaviour//입력처리
     public float timer = 0;
     HelpCalculation calculation = new HelpCalculation();
     public float TouchDecisionTime = 0.7f;
-    public int StateCherk()
+    public InputStateKind StateCherk()
     {
         /*
          * 클릭입력은 나중에 터치입력으로 바꿔야함.

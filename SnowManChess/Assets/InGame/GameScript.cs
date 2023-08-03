@@ -99,7 +99,7 @@ public partial class GameScript : MonoBehaviour
 
         };
         map.MapCreate(mapSet1);
-        Logic = new GameLogic(map.mapArea);
+        //Logic = new GameLogic(map.mapArea);
 
     }
 }
@@ -152,112 +152,118 @@ public partial class GameScript
         }
 
     }
-    Command.PieceMove pieceMove = new Command.PieceMove();
     List<Vector2Int> Candidate;//map.PieceCanGoTileCandidate(EnterXy);에게 반환받는다. 기물이 이동할 수 있는 타일위치리스트
     
     
  
+    void AreaPick(Area Area)
+    {
 
+    }
+    void AreaPut(Area Area)
+    {
+
+    }
+    //void AreaRoute(Area area)
+    //{
+
+    //}
+
+    Order.PieceMove pieceMove = new Order.PieceMove();
     private void Update()
     {
          
-        int state=UserInput.instance.StateCherk();
-        (Vector2Int EnterXY, bool BeMouseOnArea, Area area) a = map.mapArea.TouchCherk();
-        Vector2Int EnterXY = a.EnterXY;
-        bool BeMouseOnArea = a.BeMouseOnArea;
-        print(EnterXY);
-        print(BeMouseOnArea);
-        Area area = a.area;
+        InputStateKind state=UserInput.instance.StateCherk();
 
-        if (inputMode ==InputMode.Pick)
+
+        if (inputMode == InputMode.Pick)
         {
-            if(state==InputStateKind.Touch)
+            if (state == InputStateKind.Touch)
             {
-                if(BeMouseOnArea is true)
+                if(map.mapArea.GetAreaTouched(out TileScript tile))//삭제
                 {
-
-                    map.FindArea(EnterXY).tile.Tiletest();
-                    if (map.FindArea(EnterXY).piece is not null)//터치한 타일에 기물이 있어야 
-                    {
-                        map.FindArea(EnterXY).tile.TileTouch();
-                        pieceMove.piece = XY.ToXY(EnterXY);
-                        inputMode = InputMode.Put;
-                        Candidate=map.PieceCanGoTileCandidate(EnterXY);
-                    }
+                    tile.TileTouch();
                 }
+                if (map.mapArea.GetAreaTouched(out PieceScript piece))//터치한 타일에 기물이 있어야 
+                {
+                    pieceMove.piece = piece;
+                    inputMode = InputMode.Put;
+                    //Candidate = map.PieceCanGoTileCandidate(EnterXY);
+                } 
             }
-            else if(state==InputStateKind.LongTouch)
+            else if (state == InputStateKind.LongTouch)
             {
-                if (map.FindArea(EnterXY).piece is not null)
-                {
-                    inputMode = InputMode.Route;
-                }
+                inputMode = InputMode.Route;
             }
         }
         else if (inputMode == InputMode.Put)
         {
             if (state == InputStateKind.Touch)
             {
-                if (BeMouseOnArea)
+                if(map.mapArea.GetAreaTouched(out Area area))
                 {
-                    if (! XY.Equals(pieceMove.piece,XY.ToXY(EnterXY)))//기물을 이동시킬 타일지정함
+                    if (pieceMove.piece.area != area)//선택한 자리와 놓는 자리가달라야함
                     {
-                        pieceMove.ToTile = XY.ToXY(EnterXY);
-                        Logic.PieceMove(pieceMove);
+                        pieceMove.toArea = area;
+                        //Logic.PieceMove(pieceMove);
 
                         map.BeAllTileWhite();
-                        map.FindArea(EnterXY).tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                        area.tile.GetComponent<SpriteRenderer>().color = Color.blue;
 
                         inputMode = InputMode.Pick;
                     }
-                    else//같은 타일을 두번 터치하면
-                    {
-                        inputMode = InputMode.Pick;//다시 처음으로
-                    }
-                    
+                }
+                else//같은 타일을 두번 터치하면
+                {
+                    inputMode = InputMode.Pick;//다시 처음으로
                 }
             }
             else//맵외곽을 터치
             {
 
             }
-               
+
         }
         else if (inputMode == InputMode.Route)
         {
-            if(state==InputStateKind.Ended)
+            if (state == InputStateKind.Touch)
+            {
+                if(map.mapArea.GetAreaTouched(out Area area))
+                {
+                    area.tile.TileDrag();
+                }
+            }
+            else if(state == InputStateKind.Ended)
             {
                 inputMode = InputMode.Pick;
             }
-            map.FindArea(EnterXY).tile.TileDrag();
-
         }
-        else if(inputMode==InputMode.Disposition)//임시 
+        else if (inputMode == InputMode.Disposition)//임시 
         {
-
             if (state == InputStateKind.Touch)
             {
-                map.BeAllTileWhite();
-                if (testScript.젠장==하.건물)
+                if(map.mapArea.GetAreaTouched(out Area area))
                 {
-                    map.Create(bkk, area);
-                    inputMode = InputMode.Pick;
-                }
-                if (testScript.젠장 == 하.기물)
-                {
-                    map.Create(Pkk, area);
-                    inputMode = InputMode.Pick;
-                }
-                if (testScript.젠장 == 하.타일)
-                {
-                    map.Create(Tkk, area);
-                    inputMode = InputMode.Pick;
+                    map.BeAllTileWhite();
+                    if (testScript.젠장 == 하.건물)
+                    {
+                        map.Create(bkk, area);
+                        inputMode = InputMode.Pick;
+                    }
+                    if (testScript.젠장 == 하.기물)
+                    {
+                        map.Create(Pkk, area);
+                        inputMode = InputMode.Pick;
+                    }
+                    if (testScript.젠장 == 하.타일)
+                    {
+                        map.Create(Tkk, area);
+                        inputMode = InputMode.Pick;
+                    }
                 }
             }
         }
         BeFixedCamera(inputMode);
-
-
     }
 }
 
