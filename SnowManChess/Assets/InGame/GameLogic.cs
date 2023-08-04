@@ -13,9 +13,11 @@ public partial class GameLogic
     //게임스크립트에서 호출되는 함수
     public bool PieceMove(Order.PieceMove order)
     {
+        if(order.piece.user != order.user)
+        {
+            return false;
+        }
         List<Vector2Int> canGoXyList = AreaListOfItCanDo(order.piece);
-        MonoBehaviour.print(canGoXyList);
-        MonoBehaviour.print(order.piece.area.xy);
         if (canGoXyList.Exists(x => Equals(x, order.toArea.xy)))
         {
             PieceAction(order);
@@ -26,8 +28,91 @@ public partial class GameLogic
             return false;
         }
     }
-    public void DisplayAreaThatItCanDo(PieceScript piece)
+    public bool PieceCreate(Order.PieceCreate order)
     {
+        //왕주위 8칸밖에 소환안됨.
+
+        if(PieceCreateRuleCherk(order.area,order.user))
+        {
+            mapAreas.Create(order.pk,order.user,order.area);
+            return true;
+        }
+        return false;
+    }
+    public bool BuildingCreate(Order.BuildingCreate order)
+    {
+        if(BuildingCreateCherk(order.area))
+        {
+            mapAreas.Create(order.bk, order.user, order.area);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool BuildingCreateCherk(Area area)
+    {
+        if(area.Get(out PieceScript a))
+        {
+            return false;
+        }
+        if (area.Get(out BuildingScript a2))
+        {
+            return false;
+        }
+        return true;
+    }
+    //왕이 기물을 만들 수 있는 범위.
+    List<Vector2Int> KingPieceCreateAround = new List<Vector2Int>()
+    {
+        new Vector2Int(-1,1),
+        new Vector2Int(0,1),
+        new Vector2Int(1,1),
+        new Vector2Int(-1,-1),
+        new Vector2Int(0,-1),
+        new Vector2Int(1,-1),
+        new Vector2Int(-1,0),
+        new Vector2Int(1,0),
+    };
+    bool PieceCreateRuleCherk(Area area,User user)
+    {
+        foreach(Vector2Int xy in KingPieceCreateAround)
+        {
+            Vector2Int aroundxy = xy + area.xy;//aroundxy=주위 8칸 좌표.
+            if (IsXyInsideTheMapAreaCherk(aroundxy))
+            {
+                if(mapAreas.Find(aroundxy).Get(out PieceScript piece2))
+                {
+                    //주위 8칸에 있는 기물을 모두 검색한뒤 킹리스트에 있는 아군 왕과 비교하여
+                    //아군왕 주위 8칸에만 기물을 놓을 수 있음. 
+                    if(piece2 == mapAreas.KingList.Find(s=>s.user==user))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    public void DisplayCanCreatePieceArea(User user)
+    {
+        PieceScript King= mapAreas.KingList.Find(s => s.user == user);
+        foreach (Vector2Int xy in KingPieceCreateAround)
+        {
+            Vector2Int aroundxy = xy + King.area.xy;//aroundxy=주위 8칸 좌표.
+            if (IsXyInsideTheMapAreaCherk(aroundxy))
+            {
+                mapAreas.Find(aroundxy).tile.ColorBule();
+            }
+        }
+    }
+    public void DisplayAreaThatItCanDo(PieceScript piece,User user)
+    {
+        if (piece.user != user)
+        {
+            return;
+        }
         List<Vector2Int> canGoXyList;
         canGoXyList = AreaListOfItCanDo(piece);
         foreach (Vector2Int xy in canGoXyList)
@@ -66,8 +151,7 @@ public partial class GameLogic
             {
                 //갈 수  절대위치=기물의 현재위치+ 갈 수 있는 상대위치
                 Vector2Int CanGoXY = piece.area.xy + xy;
-                MonoBehaviour.print(CanGoXY);
-                if (AllCherk(piece, CanGoXY))
+                if (PieceMoveAllCherk(piece, CanGoXY))
                 {
                     returnList.Add(CanGoXY);
                 }
@@ -81,7 +165,7 @@ public partial class GameLogic
         //반환
         return returnList;
     }
-    bool AllCherk(PieceScript piece, Vector2Int toAreaXy)
+    bool PieceMoveAllCherk(PieceScript piece, Vector2Int toAreaXy)
     {
         if (IsXyInsideTheMapAreaCherk(toAreaXy))
         {
@@ -185,7 +269,29 @@ public partial class GameLogic//내부처리 로직
             if (order.toArea.Put(piece, out PieceScript outPiece))
             {
                 //이부분은 따로 처리할 것.
-                MonoBehaviour.Destroy(outPiece.gameObject);
+                MonoBehaviour.Destroy(outPiece.gameObject);//이동한 곳에서 맞닿들인 기물에 대한 처리
+            }
+            else//이동한 곳에서 맞닿들인 건물,타일,아이템
+            {
+                if(order.toArea.Get(out BuildingScript building))
+                {
+                    if(building.kind==BK.Boom)//폭발이펙트 처리ㄴ
+                    {
+                        piece.ObjectDestory();
+                        building.ObjectDestory();
+                    }
+                }
+                if (order.toArea.Get(out ItemScript item))
+                {
+                    if(item.kind==IK.Jump)
+                    {
+
+                    }
+                }
+                if (order.toArea.Get(out TileScript tile))
+                {
+
+                }
             }
         }
     }

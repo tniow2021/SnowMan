@@ -73,6 +73,10 @@ public partial class TileScript //외부에 호출당하는 거 관련
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
     }
+    public void ColorBule()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().color = new Color32(0x9E,0xA7, 0xFF,255);
+    }
     public void BetileWilte()
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
@@ -105,6 +109,7 @@ public partial class TileScript
     
     public void ObjectDestory()
     {
+        area.tile = null;
         Destroy(this.gameObject);
     }
 }

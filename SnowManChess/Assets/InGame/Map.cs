@@ -62,10 +62,6 @@ public class MapSet
     public (PK pk, Vector2Int xy, User user)[] PieceSet;
     public (BK bk, Vector2Int xy, User user)[] BuildingSet;
 }
-public class MapArdeas
-{
-    
-}
 
 public partial class Map : MonoBehaviour
 {
@@ -95,8 +91,8 @@ public partial class Map : MonoBehaviour
                 Area area = FindArea(x, y);
 
 
-                Create(mapSet.TileSet[x, y], area);
-                Create(mapSet.ItemSet[x, y], area);
+                mapArea.Create(mapSet.TileSet[x, y], area);
+                mapArea.Create(mapSet.ItemSet[x, y], area);
                 //기물과 건물에는 유저클래스까지 넣어준다.
  
 
@@ -106,12 +102,12 @@ public partial class Map : MonoBehaviour
         if(mapSet.PieceSet is not null)for(int i=0;i<mapSet.PieceSet.Length;i++)
         {
             (PK pk, Vector2Int xy, User user) a = mapSet.PieceSet[i];
-            Create(a.pk, a.user, mapArea.Find(a.xy));
+            mapArea.Create(a.pk, a.user, mapArea.Find(a.xy));
         }
         if (mapSet.BuildingSet is not null) for (int i = 0; i < mapSet.BuildingSet.Length; i++)
         {
             (BK bk, Vector2Int xy, User user) a = mapSet.BuildingSet[i];
-            Create(a.bk, a.user, mapArea.Find(a.xy));
+            mapArea.Create(a.bk, a.user, mapArea.Find(a.xy));
         }
     }
     public void Turn(int turnNumber)
@@ -151,56 +147,7 @@ public partial class Map
         }
     }
 
-    public void Create(PK pk,User user,Area area)
-    {
-        if(ObjectDict.Instance.FindObject(pk,out GameObject obj))
-        {
-            GameObject newPieceObject = Instantiate(obj);
-            PieceScript newPieceScript = newPieceObject.GetComponent<PieceScript>();
-            newPieceScript.user = user;
-            if (area.Put(newPieceScript,out PieceScript oldPiece))
-            {
-                oldPiece.ObjectDestory();
-            }
-        }
-    }
-    public void Create(BK bk, User user, Area area)
-    {
-        if (ObjectDict.Instance.FindObject(bk, out GameObject obj))
-        {
-            GameObject newBuildingObject = Instantiate(obj);
-            BuildingScript newBuildingScript = newBuildingObject.GetComponent<BuildingScript>();
-            newBuildingScript.user = user;
-            if (area.Put(newBuildingScript, out BuildingScript oldBuilding))
-            {
-                oldBuilding.ObjectDestory();
-            }
-        }
-    }
-    public void Create(TK tk, Area area)
-    {
-        if(ObjectDict.Instance.FindObject(tk,out GameObject obj))
-        {
-            GameObject newTileObject = Instantiate(obj);
-            TileScript newTileScript = newTileObject.GetComponent<TileScript>();
-            if(area.Put(newTileScript, out TileScript oldtile))
-            {
-                oldtile.ObjectDestory();
-            }
-        }
-    }   
-    public void Create(IK ik, Area area)
-    {
-        if(ObjectDict.Instance.FindObject(ik,out GameObject obj))
-        {
-            GameObject newItemObject = Instantiate(obj);
-            ItemScript newItemScript = newItemObject.GetComponent<ItemScript>();
-            if(area.Put(newItemScript, out ItemScript oldItem))
-            {
-                oldItem.ObjectDestory();
-            }
-        }
-    }
+
 }
 
 

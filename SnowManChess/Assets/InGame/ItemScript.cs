@@ -25,6 +25,7 @@ public class ItemScript : MonoBehaviour
     }
     public void ObjectDestory()
     {
+        area.item = null;
         Destroy(this.gameObject);
     }
 }

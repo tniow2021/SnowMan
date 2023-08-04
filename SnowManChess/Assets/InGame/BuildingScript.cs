@@ -18,6 +18,7 @@ public class BuildingScript : MonoBehaviour
      */
     public void ObjectDestory()
     {
+        area.building = null;
         Destroy(this.gameObject);
     }
 }

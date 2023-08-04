@@ -6,6 +6,7 @@ public class MapAreas : MonoBehaviour
 {
     //»ý¼º
     List<List<Area>> areas = new List<List<Area>>();
+    public List<PieceScript> KingList = new List<PieceScript>();
 
     public Vector2Int size
     {
@@ -148,6 +149,64 @@ public class MapAreas : MonoBehaviour
                 areas[i][j].piece.Turn(turnNumber);
                 areas[i][j].building.Turn(turnNumber);
                 areas[i][j].item.Turn(turnNumber);
+            }
+        }
+    }
+
+    public void Create(PK pk, User user, Area area)
+    {
+        if (ObjectDict.Instance.FindObject(pk, out GameObject obj))
+        {
+
+            GameObject newPieceObject = Instantiate(obj);
+
+            PieceScript newPieceScript = newPieceObject.GetComponent<PieceScript>();
+            if (pk == PK.Aking || pk == PK.Bking)
+            {
+                KingList.Add(newPieceScript);
+            }
+            newPieceScript.user = user;
+            if (area.Put(newPieceScript, out PieceScript oldPiece))
+            {
+                oldPiece.ObjectDestory();
+            }
+        }
+    }
+    public void Create(BK bk, User user, Area area)
+    {
+        print(area.xy);
+        if (ObjectDict.Instance.FindObject(bk, out GameObject obj))
+        {
+            GameObject newBuildingObject = Instantiate(obj);
+            BuildingScript newBuildingScript = newBuildingObject.GetComponent<BuildingScript>();
+            newBuildingScript.user = user;
+            if (area.Put(newBuildingScript, out BuildingScript oldBuilding))
+            {
+                oldBuilding.ObjectDestory();
+            }
+        }
+    }
+    public void Create(TK tk, Area area)
+    {
+        if (ObjectDict.Instance.FindObject(tk, out GameObject obj))
+        {
+            GameObject newTileObject = Instantiate(obj);
+            TileScript newTileScript = newTileObject.GetComponent<TileScript>();
+            if (area.Put(newTileScript, out TileScript oldtile))
+            {
+                oldtile.ObjectDestory();
+            }
+        }
+    }
+    public void Create(IK ik, Area area)
+    {
+        if (ObjectDict.Instance.FindObject(ik, out GameObject obj))
+        {
+            GameObject newItemObject = Instantiate(obj);
+            ItemScript newItemScript = newItemObject.GetComponent<ItemScript>();
+            if (area.Put(newItemScript, out ItemScript oldItem))
+            {
+                oldItem.ObjectDestory();
             }
         }
     }

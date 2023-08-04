@@ -38,10 +38,12 @@ public enum PK
 public enum IK
 {
     none,
-    Ice
+    Ice,
+    Jump
 }
 public enum BK
 {
     none,
-    SnowWall
+    SnowWall,
+    Boom
 }
