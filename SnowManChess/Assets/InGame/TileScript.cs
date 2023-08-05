@@ -49,14 +49,29 @@ public partial class TileScript //지형정의 관련
 
     public int SnowAmount = 0;//
 }
-public partial class TileScript : MonoBehaviour//기물관련
+public partial class TileScript : MonoBehaviour
 {
-
+    public bool IsHaveSnow = true;
+    public bool ISChangeHot()
+    {
+        if(kind==TK.Snow)
+        {
+            if(IsHaveSnow is true)
+            {
+                IsHaveSnow = false;
+                return true;
+            }
+        }
+        return false;
+    }
+    public void ChangeHot()
+    {
+        animator.SetBool("IsHot", true);
+    }
 
 }
 public partial class TileScript //외부에 호출당하는 거 관련
 {
-    float timer = 0;
     public void TileTouch()
     {
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.red;

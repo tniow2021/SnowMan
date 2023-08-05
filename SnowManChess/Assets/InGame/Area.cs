@@ -262,4 +262,29 @@ public class Area : MonoBehaviour
             return true;
         }
     }
+
+    public bool Cherk(ElementKind ek)
+    {
+        if(ek==ElementKind.piece)
+        {
+            if (piece is not null) return true;
+            else return false; 
+        }
+        else if (ek == ElementKind.tile)
+        {
+            if (tile is not null) return true;
+            else return false;
+        }
+        else if (ek == ElementKind.building)
+        {
+            if (building is not null) return true;
+            else return false;
+        }
+        else if (ek == ElementKind.item)
+        {
+            if (item is not null) return true;
+            else return false;
+        }
+        return false;
+    }
 }

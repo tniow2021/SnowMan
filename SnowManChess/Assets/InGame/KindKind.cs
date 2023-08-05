@@ -3,7 +3,13 @@ public enum UserKind
     admin,
     general
 }
-
+public enum ElementKind
+{
+    piece,
+    tile,
+    building,
+    item
+}
 
 public enum InputStateKind
 {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.Rendering;
 public class UserManager
 {
@@ -114,8 +115,8 @@ public partial class GameScript : MonoBehaviour
     {
         instance = this.gameObject.GetComponent<GameScript>();
 
-        User user1 = new User(UserKind.general, 1);
-        User user2 = new User(UserKind.general, 2);
+        User user1 = new User(UserKind.general, 1,"damyeong");
+        User user2 = new User(UserKind.general, 2,"dongmin");
         userManager.Add(user1);
         userManager.Add(user2);
 
@@ -161,6 +162,8 @@ public partial class GameScript : MonoBehaviour
         };
         map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
+
+        UIsetting(topUser, bottomUser);
     }
 }
 public enum InputMode
@@ -172,6 +175,21 @@ public enum InputMode
 }
 public partial class GameScript
 {
+    public GameObject WinLossWindow;
+    public TMP_Text TopUserNameText;
+    public TMP_Text bottomUserNameText;
+    void UIsetting(User topUser,User bottomUser)
+    {
+        TopUserNameText.text = topUser.name;
+        bottomUserNameText.text = bottomUser.name;
+    }
+    public void DieKingEvent(User user)
+    {
+        WinLossWindow.SetActive(true);
+        WinLossWindow.transform.GetChild(0).GetComponent<TMP_Text>().text
+            = user.name + " is Loss";
+    }
+
     public CameraScript cameraScript;
     public InputMode inputMode = InputMode.Pick;
     void BeFixedCamera(InputMode mode)
@@ -268,6 +286,10 @@ public partial class GameScript
                 if (복잡해 == 하.기물)
                 {
                     Logic.DisplayCanCreatePieceArea(user);
+                }
+                if(복잡해==하.건물)
+                {
+                    Logic.DisplayBuildingCreateXY(user);
                 }
             }                
             if (state == InputStateKind.Touch)

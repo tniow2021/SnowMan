@@ -49,6 +49,7 @@ public partial class PieceScript//오브젝트관련
         
         if (kind == PK.Aking||kind==PK.Bking)
         {
+            GameScript.instance.DieKingEvent(user);
             area.mapAreas.KingList.Remove(this);
         }
         area.piece = null;

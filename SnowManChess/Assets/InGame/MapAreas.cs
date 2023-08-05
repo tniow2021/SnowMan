@@ -210,4 +210,63 @@ public class MapAreas : MonoBehaviour
             }
         }
     }
+    public List<Area> ReturnAreaListThatHaveIT(ElementKind ek)
+    {
+
+        List<Area> allarea = new List<Area>();
+        if (ek == ElementKind.piece)
+        {
+            foreach(List<Area> area1 in areas)
+            {
+                foreach (Area area in area1)
+                {
+                    if(area.Cherk(ElementKind.piece))
+                    {
+                        allarea.Add(area);
+                    }
+                }
+            }
+        }
+        else if (ek == ElementKind.tile)
+        {
+            foreach (List<Area> area1 in areas)
+            {
+                foreach (Area area in area1)
+                {
+                    if (area.Cherk(ElementKind.tile))
+                    {
+                        allarea.Add(area);
+                    }
+                }
+            }
+        }
+        else if (ek == ElementKind.building)
+        {
+            foreach (List<Area> area1 in areas)
+            {
+                foreach (Area area in area1)
+                {
+                    if (area.Cherk(ElementKind.building))
+                    {
+                        allarea.Add(area);
+                    }
+                }
+            }
+        }
+        else if (ek == ElementKind.item)
+        {
+            foreach (List<Area> area1 in areas)
+            {
+                foreach (Area area in area1)
+                {
+                    if (area.Cherk(ElementKind.item))
+                    {
+                        allarea.Add(area);
+                    }
+                }
+            }
+        }
+        return allarea;
+    }
+
 }

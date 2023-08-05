@@ -49,7 +49,8 @@ public partial class ClientScript : MonoBehaviour
         DontDestroyOnLoad(ClinetGameObject);
 
         
-        communi.Connect(ServerIP, ServerPort);
+        //communi.Connect(ServerIP, ServerPort);
+
         //Å×½ºÆ®
         //Command.ToSer.PieceCreate order = new Command.ToSer.PieceCreate();
         //order.pieceKind1 = PK.King;

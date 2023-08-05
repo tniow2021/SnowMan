@@ -34,14 +34,16 @@ public partial class GameLogic
 
         if(PieceCreateRuleCherk(order.area,order.user))
         {
-            mapAreas.Create(order.pk,order.user,order.area);
+            mapAreas.Create(order.pk, order.user, order.area);
+            //왕이 위치한 타일의 눈타일을 뜨겁게만든다.
+            mapAreas.KingList.Find(s=>s.user==order.user).area.tile.ChangeHot();
             return true;
         }
         return false;
     }
     public bool BuildingCreate(Order.BuildingCreate order)
     {
-        if(BuildingCreateCherk(order.area))
+        if(BuildingCreateCherk(order.area,order.user))
         {
             mapAreas.Create(order.bk, order.user, order.area);
             return true;
@@ -51,17 +53,49 @@ public partial class GameLogic
             return false;
         }
     }
-    bool BuildingCreateCherk(Area area)
+    List<Vector2Int> aroundBuildingCreate = new List<Vector2Int>()
     {
-        if(area.Get(out PieceScript a))
+        new Vector2Int(1,0),
+        new Vector2Int(-1,0),
+        new Vector2Int(0,1),
+        new Vector2Int(0,-1),
+    };
+    public List<Vector2Int> XyListBuildingCreateXY(User user)
+    {
+        List<Area> allAreaThatHavePiece = mapAreas.ReturnAreaListThatHaveIT(ElementKind.piece);
+        List<Area> UsersArea = allAreaThatHavePiece.FindAll(s => s.piece.user == user);
+
+        List<Vector2Int> CanCreateXY=new List<Vector2Int>();
+        foreach(Area area in UsersArea)
+        {
+            CanCreateXY.AddRange(ReturnXyListInsideMapArea(area.xy, aroundBuildingCreate));
+        }
+        return CanCreateXY;
+
+    }
+    bool BuildingCreateCherk(Area area,User user)
+    {
+        if(area.Cherk(ElementKind.piece))
         {
             return false;
         }
-        if (area.Get(out BuildingScript a2))
+        if (area.Cherk(ElementKind.building))
+        {
+            return false;
+        }
+        List<Vector2Int> CanCreateXY = XyListBuildingCreateXY( user);
+        if(CanCreateXY .Exists(s=>Equals(s,area.xy))is false)
         {
             return false;
         }
         return true;
+    }
+    public void DisplayBuildingCreateXY(User user)
+    {
+        foreach(Vector2Int xy in XyListBuildingCreateXY(user))
+        {
+            mapAreas.Find(xy).tile.GetComponent<SpriteRenderer>().color = new Color32(168, 236, 255, 255);
+        }
     }
     //왕이 기물을 만들 수 있는 범위.
     List<Vector2Int> KingPieceCreateAround = new List<Vector2Int>()
@@ -77,6 +111,10 @@ public partial class GameLogic
     };
     bool PieceCreateRuleCherk(Area area,User user)
     {
+        if(mapAreas.KingList.Find(s => s.user == user).area.tile.ISChangeHot()is false)
+        {
+            return false;
+        }
         foreach(Vector2Int xy in KingPieceCreateAround)
         {
             Vector2Int aroundxy = xy + area.xy;//aroundxy=주위 8칸 좌표.
@@ -196,6 +234,19 @@ public partial class GameLogic
             return true;
         }
     }//맵아레아안에 해당좌표가 있을 수 있는가?
+    List<Vector2Int>ReturnXyListInsideMapArea(Vector2Int center,List<Vector2Int>around)
+    {
+        List<Vector2Int> returnList = new List<Vector2Int>();
+        foreach(var xy in around)
+        {
+            Vector2Int xy2 = center + xy;
+            if(IsXyInsideTheMapAreaCherk(xy2))
+            {
+                returnList.Add(xy2);
+            }
+        }
+        return returnList;
+    }
     bool Absolute_check(PieceScript piece, Area toArea)//(절대설정)
     {
         //(구현중)상대방 기물위치로만 갈 수 있지 자기나 자기 기물한텐 가지못하고,
@@ -269,7 +320,7 @@ public partial class GameLogic//내부처리 로직
             if (order.toArea.Put(piece, out PieceScript outPiece))
             {
                 //이부분은 따로 처리할 것.
-                MonoBehaviour.Destroy(outPiece.gameObject);//이동한 곳에서 맞닿들인 기물에 대한 처리
+                outPiece.ObjectDestory();
             }
             else//이동한 곳에서 맞닿들인 건물,타일,아이템
             {
