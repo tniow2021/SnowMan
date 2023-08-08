@@ -26,8 +26,10 @@ public class UserManager
 public class TurnManager
 {
     static TurnManager instance;
-    public TurnManager()
+    GameLogic logic;
+    public TurnManager(GameLogic _logic)
     {
+        logic = _logic;
         instance = this;
     }
     public static TurnManager GetInstance()
@@ -43,6 +45,7 @@ public class TurnManager
     }
     void TurnChange()
     {
+        logic.TurnIsEnd();
         TurnCounting++;
         orderList[index].NowNotMyTurn();
         index++;
@@ -109,7 +112,7 @@ public partial class GameScript : MonoBehaviour
     GameLogic Logic;
     public Map map;
     public UserManager userManager = new UserManager();
-    public TurnManager turnManager = new TurnManager();
+    public TurnManager turnManager; 
 
     public TurnConnect Turn1;
     public TurnConnect Turn2;
@@ -117,18 +120,16 @@ public partial class GameScript : MonoBehaviour
     {
         instance = this.gameObject.GetComponent<GameScript>();
 
+
         User user1 = new User(UserKind.general, 1,"damyeong");
         User user2 = new User(UserKind.general, 2,"dongmin");
         userManager.Add(user1);
         userManager.Add(user2);
 
-        //일단 순서는 user1,user2로.
-        turnManager.OrdinalAdd(Turn1,user1);
-        turnManager.OrdinalAdd(Turn2,user2);
+
 
         User topUser = user2;
         User bottomUser = user1;
-        User System = new User(UserKind.admin,0);
         MapSet mapSet1 = new MapSet()
         {
             size = new Vector2Int(9, 9),
@@ -153,7 +154,10 @@ public partial class GameScript : MonoBehaviour
         };
         map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
-
+        turnManager = new TurnManager(Logic);
+               //일단 순서는 user1,user2로.
+        turnManager.OrdinalAdd(Turn1,user1);
+        turnManager.OrdinalAdd(Turn2,user2); 
         UIsetting(topUser, bottomUser);
     }
 }

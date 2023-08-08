@@ -36,7 +36,13 @@ public class MapAreas : MonoBehaviour
     
     //Create에서 채워지는 리스트듷
     List<PieceScript> KingList = new List<PieceScript>();
-    List<TileScript> coolSnowTileList = new List<TileScript>();
+    public List<TileScript> coolSnowTileList = new List<TileScript>();
+    public void CoolTileToHotTile(TileScript tile)
+    {
+        tile.ChangeHot();
+        coolSnowTileList.Remove(tile);
+    }
+
     public PieceScript GetKing(User user)//임시
     {
          foreach(var a in areas)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 public partial class GameLogic
@@ -88,8 +89,17 @@ public partial class GameLogic
 }
 public partial class GameLogic//턴관련
 {
+    System.Random random = new System.Random();
     public void TurnIsEnd()
     {
+        //CoolSnowTileList에서 랜덤한 위치의 타일하나를 불러온다.
+        if(mapAreas.coolSnowTileList.Count>0)
+        {
+            TileScript CoolTile= mapAreas.coolSnowTileList
+                [random.Next(0, mapAreas.coolSnowTileList.Count - 1)];
+            //뜨겁게 만들어준다.
+            mapAreas.CoolTileToHotTile(CoolTile);
+        }
 
     }
 }
