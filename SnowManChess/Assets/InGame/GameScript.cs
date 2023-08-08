@@ -35,25 +35,27 @@ public class TurnManager
         return instance;
     }
     List<TurnConnect> orderList = new List<TurnConnect>();//Order 는 서수란 뜻
-    int TurnNumber = 0;
-    public void TurnIsEnd()
+    int index = 0;
+    int TurnCounting = 0;
+    public int GetTurnCount()
     {
-
+        return TurnCounting;
     }
     void TurnChange()
     {
-        orderList[TurnNumber].NowNotMyTurn();
-        TurnNumber++;
-        if(TurnNumber>=orderList.Count)
+        TurnCounting++;
+        orderList[index].NowNotMyTurn();
+        index++;
+        if(index >= orderList.Count)
         {
-            TurnNumber = 0;
+            index = 0;
         }
-        orderList[TurnNumber].NowMyTurn();
+        orderList[index].NowMyTurn();
     }
     public User GetTurn()//널오류가 뜨지않게 조심해서 쓰기
     {
-        MonoBehaviour.print(TurnNumber);
-        return orderList[TurnNumber].user;
+        MonoBehaviour.print(index);
+        return orderList[index].user;
     }
     public void TurnButtenEvent(User user)
     {   //턴은 원래 턴매니저에 의해 자동으로
@@ -133,7 +135,7 @@ public partial class GameScript : MonoBehaviour
             PieceSet = new (PK, Vector2Int, User)[]
             {
                 (PK.Bking, new Vector2Int(4, 8), topUser),
-                (PK.Aking, new Vector2Int(4, 0), bottomUser)
+                (PK.Aking, new Vector2Int(4, 0), bottomUser)    
             },
             TileSet = new TK[,]
             {
@@ -147,18 +149,7 @@ public partial class GameScript : MonoBehaviour
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow}
             },
-            ItemSet=new IK[,]
-            {
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.Jump,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.Jump,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none },
-                {IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none,IK.none }
-            }
+
         };
         map.MapCreate(mapSet1);
         Logic = new GameLogic(map.mapArea);
@@ -192,38 +183,40 @@ public partial class GameScript
 
     public CameraScript cameraScript;
     public InputMode inputMode = InputMode.Pick;
-    void BeFixedCamera(InputMode mode)
-    {
-        if (Input.touchCount == 2)
-        {
-            cameraScript.CameraMoveAble = true;
-        }
-        else if (Input.touchCount > 2)
-        {
-            cameraScript.CameraMoveAble = true;
-        }
+    //void BeFixedCamera(InputMode mode)
+    //{
+    //    if (Input.touchCount == 2)
+    //    {
+    //        cameraScript.CameraMoveAble = true;
+    //    }
+    //    else if (Input.touchCount > 2)
+    //    {
+    //        cameraScript.CameraMoveAble = true;
+    //    }
 
 
-        if (mode == InputMode.Route)
-        {
-            //드래그를 하는 동안에는 카메라를 멈춘다.
-            cameraScript.CameraMoveAble = false;
-        }
-        else if (mode == InputMode.Pick)
-        {
-            //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
-            cameraScript.CameraMoveAble = true;
+    //    if (mode == InputMode.Route)
+    //    {
+    //        //드래그를 하는 동안에는 카메라를 멈춘다.
+    //        cameraScript.CameraMoveAble = false;
+    //    }
+    //    else if (mode == InputMode.Pick)
+    //    {
+    //        //드래그도 터치도하지않는 대기상태라면 카메라가 움직일 수 있게 풀어준다.
+    //        cameraScript.CameraMoveAble = true;
 
-        }
+    //    }
 
-    }
+    //}
+
+
     private void Update()
     {
-        //오더 횟수계산하는거 만들어야한다.
+
         User user = turnManager.GetTurn();
         InputStateKind state=UserInput.instance.StateCherk();
         GameHandling(state,user);
-        BeFixedCamera(inputMode);
+        //BeFixedCamera(inputMode);
         
     }
 
@@ -239,7 +232,7 @@ public partial class GameScript
                 if (map.mapArea.GetAreaTouched(out PieceScript piece))//터치한 타일에 기물이 있어야 
                 {
                     pieceMove.piece = piece;
-                    Logic.DisplayAreaThatItCanDo(piece,user);
+                    Logic.DisplaypieceMove(piece);
                     inputMode = InputMode.Put;
                 }
             }
@@ -285,11 +278,11 @@ public partial class GameScript
             {
                 if (복잡해 == 하.기물)
                 {
-                    Logic.DisplayCanCreatePieceArea(user);
+                    Logic.DisplayPieceCreate(user);
                 }
                 if(복잡해==하.건물)
                 {
-                    Logic.DisplayBuildingCreateXY(user);
+                    Logic.DisplayBuildingCreate(bkk,user);
                 }
             }                
             if (state == InputStateKind.Touch)
@@ -303,7 +296,7 @@ public partial class GameScript
                         buildingCreate.user = user;
                         buildingCreate.area = area;
                         print(123);
-                        if(Logic.BuildingCreate(buildingCreate))
+                        if (Logic.BuildingCreate(buildingCreate))
                         {
                             print(456);
                             turnManager.MovementReport(MovementKind.BuildingCreate);
@@ -315,7 +308,7 @@ public partial class GameScript
                         pieceCreate.pk = Pkk;
                         pieceCreate.user = user;
                         pieceCreate.area = area;
-                        if(Logic.PieceCreate(pieceCreate))
+                        if (Logic.PieceCreate(pieceCreate))
                         {
                             turnManager.MovementReport(MovementKind.PieceCreate);
                         }

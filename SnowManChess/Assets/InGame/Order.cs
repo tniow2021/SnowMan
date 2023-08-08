@@ -9,11 +9,6 @@ public class Order
         public PieceScript piece;
         public Area toArea;
         public User user;
-        public void Clear()
-        {
-            piece = null;
-            toArea = null;
-        }
     }
     public class PieceCreate
     {

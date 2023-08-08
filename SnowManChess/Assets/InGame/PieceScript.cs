@@ -7,8 +7,26 @@ public partial class PieceScript : MonoBehaviour //기물정의
     public Area area;
     public PK kind;
     public User user;
-
     public Vector2 additionalLocalPositon;
+    
+    ItemScript item;
+    public bool GetItem(out ItemScript _item)
+    {
+        if(item is not null)
+        {
+            _item = item;
+            return true;
+        }
+        else
+        {
+            _item = null;
+            return false;
+        }
+    }
+    public void GiveItem(ItemScript _item)
+    {
+        item = _item;
+    }
     public void Turn(int turnNumber)
     {
 
@@ -46,13 +64,6 @@ public partial class PieceScript//오브젝트관련
 {
     public void ObjectDestory()
     {
-        
-        if (kind == PK.Aking||kind==PK.Bking)
-        {
-            GameScript.instance.DieKingEvent(user);
-            area.mapAreas.KingList.Remove(this);
-        }
-        area.piece = null;
         Destroy(this.gameObject);
     }
     public void HardMove(Vector2Int XY)

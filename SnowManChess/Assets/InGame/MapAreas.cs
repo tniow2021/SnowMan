@@ -6,7 +6,6 @@ public class MapAreas : MonoBehaviour
 {
     //생성
     List<List<Area>> areas = new List<List<Area>>();
-    public List<PieceScript> KingList = new List<PieceScript>();
 
     public Vector2Int size
     {
@@ -34,7 +33,30 @@ public class MapAreas : MonoBehaviour
             areas.Add(row);
         }
     }
-
+    
+    //Create에서 채워지는 리스트듷
+    List<PieceScript> KingList = new List<PieceScript>();
+    List<TileScript> coolSnowTileList = new List<TileScript>();
+    public PieceScript GetKing(User user)//임시
+    {
+         foreach(var a in areas)
+        {
+            foreach(var a2 in a)
+            {
+                if(a2.Get(out PieceScript piece))
+                {
+                    if(piece.user==user)
+                    {
+                        if(piece.kind==PK.Aking||piece.kind==PK.Bking)
+                        {
+                            return piece;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
     //행동
     //게임스크립트로 가는놈
     Area areaEntered;
@@ -153,13 +175,13 @@ public class MapAreas : MonoBehaviour
         }
     }
 
+    //왕이있으면 킹리스트에 왕을 삽입
     public void Create(PK pk, User user, Area area)
     {
         if (ObjectDict.Instance.FindObject(pk, out GameObject obj))
         {
 
             GameObject newPieceObject = Instantiate(obj);
-
             PieceScript newPieceScript = newPieceObject.GetComponent<PieceScript>();
             if (pk == PK.Aking || pk == PK.Bking)
             {
@@ -192,6 +214,10 @@ public class MapAreas : MonoBehaviour
         {
             GameObject newTileObject = Instantiate(obj);
             TileScript newTileScript = newTileObject.GetComponent<TileScript>();
+            if(newTileScript.IsHaveSnow is true)
+            {
+                coolSnowTileList.Add(newTileScript);
+            }
             if (area.Put(newTileScript, out TileScript oldtile))
             {
                 oldtile.ObjectDestory();
@@ -268,5 +294,32 @@ public class MapAreas : MonoBehaviour
         }
         return allarea;
     }
-
+    public void Delete(PieceScript piece)
+    {
+        if(piece.area.Pick(out PieceScript outPiece))
+        {
+            outPiece.ObjectDestory();
+        }
+    }
+    public void Delete(TileScript tile)
+    {
+        if (tile.area.Pick(out TileScript outTile))
+        {
+            outTile.ObjectDestory();
+        }
+    }
+    public void Delete(BuildingScript building)
+    {
+        if (building.area.Pick(out BuildingScript outbuilding))
+        {
+            outbuilding.ObjectDestory();
+        }
+    }
+    public void Delete(ItemScript item)
+    {
+        if (item.area.Pick(out ItemScript outitem))
+        {
+            outitem.ObjectDestory();
+        }
+    }
 }

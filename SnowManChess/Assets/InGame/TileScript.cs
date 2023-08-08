@@ -51,7 +51,7 @@ public partial class TileScript //지형정의 관련
 }
 public partial class TileScript : MonoBehaviour
 {
-    public bool IsHaveSnow = true;
+    public bool IsHaveSnow = false;
     public bool ISChangeHot()
     {
         if(kind==TK.Snow)
@@ -124,7 +124,6 @@ public partial class TileScript
     
     public void ObjectDestory()
     {
-        area.tile = null;
         Destroy(this.gameObject);
     }
 }

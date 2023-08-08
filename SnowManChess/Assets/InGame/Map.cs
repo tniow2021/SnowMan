@@ -58,7 +58,7 @@ public class MapSet
 {
     public Vector2Int size;
     public TK[,] TileSet;
-    public IK[,] ItemSet;
+    //public IK[,] ItemSet;
     public (PK pk, Vector2Int xy, User user)[] PieceSet;
     public (BK bk, Vector2Int xy, User user)[] BuildingSet;
 }
@@ -92,7 +92,7 @@ public partial class Map : MonoBehaviour
 
 
                 mapArea.Create(mapSet.TileSet[x, y], area);
-                mapArea.Create(mapSet.ItemSet[x, y], area);
+                //mapArea.Create(mapSet.ItemSet[x, y], area);
                 //기물과 건물에는 유저클래스까지 넣어준다.
  
 

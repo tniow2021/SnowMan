@@ -8,6 +8,9 @@ public class ItemScript : MonoBehaviour
     public Map map1;
     public Vector2 additionalLocalPositon;
     public Area area;
+
+    public bool 건물통과가능하게하는가 = false;
+    public bool 타일통과가능하게하는가 = false;
     public void Turn(int turnNumber)
     {
 
@@ -25,7 +28,6 @@ public class ItemScript : MonoBehaviour
     }
     public void ObjectDestory()
     {
-        area.item = null;
         Destroy(this.gameObject);
     }
 }

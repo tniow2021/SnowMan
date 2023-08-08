@@ -280,10 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 4
-  tkk: 0
 --- !u!212 &25952513
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -638,10 +634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 8
-  tkk: 0
 --- !u!212 &70325420
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -843,10 +835,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 3
-  tkk: 0
 --- !u!95 &130779274
 Animator:
   serializedVersion: 5
@@ -1298,10 +1286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 10
-  tkk: 0
 --- !u!212 &259698106
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1983,6 +1967,7 @@ MonoBehaviour:
   EnterAble: 1
   IsPieceDie: 0
   SnowAmount: 0
+  IsHaveSnow: 1
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
@@ -2324,6 +2309,7 @@ MonoBehaviour:
   EnterAble: 1
   IsPieceDie: 0
   SnowAmount: 0
+  IsHaveSnow: 1
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
@@ -2378,6 +2364,9 @@ MonoBehaviour:
   map: {fileID: 1002674483}
   Turn1: {fileID: 1161423385}
   Turn2: {fileID: 2006327032}
+  WinLossWindow: {fileID: 0}
+  TopUserNameText: {fileID: 1015986278}
+  bottomUserNameText: {fileID: 392982245}
   cameraScript: {fileID: 519420033}
   inputMode: 0
 --- !u!114 &406747323
@@ -2896,10 +2885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 2
-  tkk: 0
 --- !u!212 &583619612
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3024,10 +3009,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 7
-  tkk: 0
 --- !u!212 &592360423
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3560,6 +3541,7 @@ MonoBehaviour:
   EnterAble: 1
   IsPieceDie: 0
   SnowAmount: 0
+  IsHaveSnow: 1
   animator: {fileID: 0}
   map1: {fileID: 0}
   coordinate: {x: 0, y: 0}
@@ -4014,10 +3996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 1
-  tkk: 0
 --- !u!212 &797704227
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5503,10 +5481,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 2
-  bkk: 0
-  pkk: 0
-  tkk: 2
 --- !u!95 &1172932331
 Animator:
   serializedVersion: 5
@@ -6372,10 +6346,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 1
-  bkk: 1
-  pkk: 0
-  tkk: 0
 --- !u!212 &1379040323
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6860,10 +6830,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 5
-  tkk: 0
 --- !u!212 &1460357227
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7657,10 +7623,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 3
-  tkk: 0
 --- !u!212 &1698883376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8508,10 +8470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 9
-  tkk: 0
 --- !u!212 &1852414822
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8701,10 +8659,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 0
-  tkk: 0
 --- !u!212 &1885490089
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8939,10 +8893,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 1
-  bkk: 0
-  pkk: 0
-  tkk: 0
 --- !u!212 &1955670910
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9193,10 +9143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 2
-  bkk: 0
-  pkk: 0
-  tkk: 3
 --- !u!95 &1979001222
 Animator:
   serializedVersion: 5
@@ -9416,10 +9362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691b72590ae735540990cdabea442fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\uC774\uB7F0": 0
-  bkk: 0
-  pkk: 6
-  tkk: 0
 --- !u!212 &2038674738
 SpriteRenderer:
   m_ObjectHideFlags: 0
