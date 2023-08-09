@@ -16,7 +16,10 @@ public partial class GameLogic
     //게임스크립트에서 호출되는 함수
     public bool PieceMove(Order.PieceMove order)
     {
-
+        if(order.piece.user!=order.user)
+        {
+            return false;
+        }
         List<Area> canGoXyList = areaListCherk.PieceMove(order.piece);
         if (canGoXyList.Count == 0) MonoBehaviour.print("시발");
         if (canGoXyList.Exists(x => Equals(x, order.toArea)))
@@ -29,8 +32,12 @@ public partial class GameLogic
             return false;
         }
     }
-    public void DisplaypieceMove(PieceScript piece)
+    public void DisplaypieceMove(PieceScript piece,User user)
     {
+        if(piece.user!=user)
+        {
+            return;
+        }
         List<Area> canGoXyList = areaListCherk.PieceMove(piece);
         foreach(Area area in canGoXyList)
         {
@@ -50,7 +57,7 @@ public partial class GameLogic
         if (canCreateXyList.Exists(x => Equals(x, order.area)))
         {
             mapAreas.Create(order.pk,order.user,order.area);
-            mapAreas.GetKing(order.user).area.tile.ChangeHot();
+            //mapAreas.GetKing(order.user).area.tile.ChangeHot();
             return true;
         }
         else
@@ -92,15 +99,35 @@ public partial class GameLogic//턴관련
     System.Random random = new System.Random();
     public void TurnIsEnd()
     {
+        TurnHandling();
+        GoHot();
+    }
+    void GoHot()
+    {
         //CoolSnowTileList에서 랜덤한 위치의 타일하나를 불러온다.
         if(mapAreas.coolSnowTileList.Count>0)
         {
             TileScript CoolTile= mapAreas.coolSnowTileList
                 [random.Next(0, mapAreas.coolSnowTileList.Count - 1)];
-            //뜨겁게 만들어준다.
-            mapAreas.CoolTileToHotTile(CoolTile);
-        }
+            mapAreas.coolSnowTileList.Remove(CoolTile);
 
+            if(ObjectDict.Instance.FindObject(TK.Hot,out GameObject HotTile))
+            {
+                GameObject newHotTile = MonoBehaviour.Instantiate(HotTile);
+                TileScript newHotTileScript=newHotTile.GetComponent<TileScript>();
+                if(CoolTile.area.Put(newHotTileScript, out TileScript outTile))
+                {
+                    outTile.ObjectDestory();
+                }
+            }
+        }
+    }
+    void TurnHandling()
+    {
+        foreach(PieceScript piece in mapAreas.allPieceList)
+        {
+            piece.Turn();
+        }
     }
 }
 public partial class GameLogic//내부처리 로직

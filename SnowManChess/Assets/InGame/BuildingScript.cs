@@ -11,7 +11,7 @@ public class BuildingScript : MonoBehaviour
     public User user;
     public bool 기물통과가능한가 = true;
     public bool 공격대상인가 = false;
-    public int HP = 3;
+    public int HP = 2;
     public void Turn(int turnNumber)
     {
 

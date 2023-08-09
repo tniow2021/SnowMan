@@ -21,8 +21,8 @@ public enum InputStateKind
 public enum TK//Tile kind
 {
     none,
-    test,
     Snow,
+    Hot,
     Lake
 }
 public enum PK

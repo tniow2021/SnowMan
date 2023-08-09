@@ -33,15 +33,16 @@ public class MapAreas : MonoBehaviour
             areas.Add(row);
         }
     }
-    
+
     //Create에서 채워지는 리스트듷
+    public List<PieceScript> allPieceList = new List<PieceScript>();
     List<PieceScript> KingList = new List<PieceScript>();
     public List<TileScript> coolSnowTileList = new List<TileScript>();
-    public void CoolTileToHotTile(TileScript tile)
-    {
-        tile.ChangeHot();
-        coolSnowTileList.Remove(tile);
-    }
+    //public void CoolTileToHotTile(TileScript tile)
+    //{
+    //    tile.ChangeHot();
+    //    coolSnowTileList.Remove(tile);
+    //}
 
     public PieceScript GetKing(User user)//임시
     {
@@ -167,19 +168,6 @@ public class MapAreas : MonoBehaviour
         return areas[index.x][index.y];
     }
 
-    public void Turn(int turnNumber)
-    {
-        for (int i = 0; i < sizeXy.x; i++)
-        {
-            for (int j = 0; j < sizeXy.y; j++)
-            {
-                areas[i][j].tile.Turn(turnNumber);
-                areas[i][j].piece.Turn(turnNumber);
-                areas[i][j].building.Turn(turnNumber);
-                areas[i][j].item.Turn(turnNumber);
-            }
-        }
-    }
 
     //왕이있으면 킹리스트에 왕을 삽입
     public void Create(PK pk, User user, Area area)
@@ -189,6 +177,7 @@ public class MapAreas : MonoBehaviour
 
             GameObject newPieceObject = Instantiate(obj);
             PieceScript newPieceScript = newPieceObject.GetComponent<PieceScript>();
+            allPieceList.Add(newPieceScript);
             if (pk == PK.Aking || pk == PK.Bking)
             {
                 KingList.Add(newPieceScript);

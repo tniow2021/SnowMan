@@ -110,10 +110,6 @@ public partial class Map : MonoBehaviour
             mapArea.Create(a.bk, a.user, mapArea.Find(a.xy));
         }
     }
-    public void Turn(int turnNumber)
-    {
-        mapArea.Turn(turnNumber);
-    }
     public Area FindArea(Vector2Int index)
     {
         return mapArea.Find(index);

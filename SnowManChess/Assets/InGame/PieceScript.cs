@@ -27,9 +27,22 @@ public partial class PieceScript : MonoBehaviour //기물정의
     {
         item = _item;
     }
-    public void Turn(int turnNumber)
+    int HotCount = 0;
+    public int hotDurability = 5;
+    public void Turn()
     {
-
+        if(area.tile.IsHot is true)
+        {
+            HotCount++;
+        }
+        else
+        {
+            HotCount = 0;
+        }
+        if(HotCount>= hotDurability)
+        {
+            area.mapAreas.Delete(this);
+        }
     }
     public int AttackPower;
     public int AttackDistance;

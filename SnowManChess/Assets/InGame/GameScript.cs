@@ -143,7 +143,7 @@ public partial class GameScript : MonoBehaviour
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
+                {TK.Snow,TK.Lake,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
                 {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
@@ -236,7 +236,7 @@ public partial class GameScript
                 if (map.mapArea.GetAreaTouched(out PieceScript piece))//터치한 타일에 기물이 있어야 
                 {
                     pieceMove.piece = piece;
-                    Logic.DisplaypieceMove(piece);
+                    Logic.DisplaypieceMove(piece,user);
                     inputMode = InputMode.Put;
                 }
             }
@@ -255,7 +255,6 @@ public partial class GameScript
                     if (Logic.PieceMove(pieceMove))
                     {
                         print("기물움직이기 성공!");
-
                         turnManager.MovementReport(MovementKind.MovePiece);
                     }
                     else
@@ -302,6 +301,7 @@ public partial class GameScript
                         print(123);
                         if (Logic.BuildingCreate(buildingCreate))
                         {
+                            
                             print(456);
                             turnManager.MovementReport(MovementKind.BuildingCreate);
                         }
@@ -314,6 +314,7 @@ public partial class GameScript
                         pieceCreate.area = area;
                         if (Logic.PieceCreate(pieceCreate))
                         {
+                           
                             turnManager.MovementReport(MovementKind.PieceCreate);
                         }
                         inputMode = InputMode.Pick;

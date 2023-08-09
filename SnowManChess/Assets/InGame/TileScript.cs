@@ -40,16 +40,14 @@ public partial class TileScript //지형정의 관련
      * 
      * 
      */
-    public int warmingDamage;//온난화데미지
-    public int PlusSpeed;//가속값
-    public bool warmingAble = false;//온난화영향
+    public bool IsHot = false;//온난화영향
     public bool buildAble = false;//장벽등 건물 건설가능 여부
     public bool EnterAble = true;//기물 진입가능 여부
     public bool IsPieceDie = false;//기물이 들어갈시에 바로 죽는지 여부(호수같은 거)
 
     public int SnowAmount = 0;//
 }
-public partial class TileScript : MonoBehaviour
+public partial class TileScript : MonoBehaviour//눈타일관련
 {
     public bool IsHaveSnow = false;
     public bool ISChangeHot()
@@ -64,10 +62,23 @@ public partial class TileScript : MonoBehaviour
         }
         return false;
     }
-    public void ChangeHot()
-    {
-        animator.SetBool("IsHot", true);
-    }
+    //public void ChangeHot()
+    //{
+    //    GetComponent<SpriteRenderer>().sprite = HotTileSprite;
+    //}
+
+}
+public partial class TileScript//호수타일관련
+{
+    //public Sprite IceLakeSprite;
+    //public Sprite WaterLakeSprite;
+    //public void IceLakeToWaterLake()
+    //{
+    //    GetComponent<SpriteRenderer>().sprite = WaterLakeSprite;
+    //    buildAble = false;
+    //    EnterAble = false;
+    //    IsPieceDie = true;
+    //}
 
 }
 public partial class TileScript //외부에 호출당하는 거 관련
@@ -97,11 +108,6 @@ public partial class TileScript //외부에 호출당하는 거 관련
         this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
-}
-
-public partial class TileScript //애니메이터관련 
-{
-    public Animator animator;
 }
 public partial class TileScript
 {
