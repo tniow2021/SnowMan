@@ -209,7 +209,7 @@ public class MapAreas : MonoBehaviour
         {
             GameObject newTileObject = Instantiate(obj);
             TileScript newTileScript = newTileObject.GetComponent<TileScript>();
-            if(newTileScript.IsHaveSnow is true)
+            if(newTileScript.kind ==TK.Snow1|| newTileScript.kind == TK.Snow2)
             {
                 coolSnowTileList.Add(newTileScript);
             }
@@ -291,11 +291,12 @@ public class MapAreas : MonoBehaviour
     }
     public void Delete(PieceScript piece)
     {
-        if(piece.area.Pick(out PieceScript outPiece))
+        if (piece.kind == PK.Aking || piece.kind == PK.Bking)
         {
-            outPiece.ObjectDestory();
+            GameScript.instance.DieKingEvent(piece.user);
         }
-    }
+        print(piece.gameObject.name);
+        piece.ObjectDestory();    }
     public void Delete(TileScript tile)
     {
         if (tile.area.Pick(out TileScript outTile))
@@ -308,13 +309,6 @@ public class MapAreas : MonoBehaviour
         if (building.area.Pick(out BuildingScript outbuilding))
         {
             outbuilding.ObjectDestory();
-        }
-    }
-    public void Delete(ItemScript item)
-    {
-        if (item.area.Pick(out ItemScript outitem))
-        {
-            outitem.ObjectDestory();
         }
     }
 }

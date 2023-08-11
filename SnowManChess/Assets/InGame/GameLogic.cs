@@ -48,7 +48,7 @@ public partial class GameLogic
     public bool PieceCreate(Order.PieceCreate order)
     {
         //자원검사
-        if (mapAreas.GetKing(order.user).area.tile.IsHaveSnow is false)
+        if (mapAreas.GetKing(order.user).area.tile.kind==TK.Hot)
         {
             return false;
         }
@@ -57,7 +57,7 @@ public partial class GameLogic
         if (canCreateXyList.Exists(x => Equals(x, order.area)))
         {
             mapAreas.Create(order.pk,order.user,order.area);
-            //mapAreas.GetKing(order.user).area.tile.ChangeHot();
+            Hot(mapAreas.GetKing(order.user).area);
             return true;
         }
         else
@@ -100,27 +100,26 @@ public partial class GameLogic//턴관련
     public void TurnIsEnd()
     {
         TurnHandling();
-        GoHot();
     }
-    void GoHot()
+    void Hot(Area area)
     {
-        //CoolSnowTileList에서 랜덤한 위치의 타일하나를 불러온다.
-        if(mapAreas.coolSnowTileList.Count>0)
+        if(area.Get(out TileScript coolTile))
         {
-            TileScript CoolTile= mapAreas.coolSnowTileList
-                [random.Next(0, mapAreas.coolSnowTileList.Count - 1)];
-            mapAreas.coolSnowTileList.Remove(CoolTile);
-
-            if(ObjectDict.Instance.FindObject(TK.Hot,out GameObject HotTile))
-            {
-                GameObject newHotTile = MonoBehaviour.Instantiate(HotTile);
-                TileScript newHotTileScript=newHotTile.GetComponent<TileScript>();
-                if(CoolTile.area.Put(newHotTileScript, out TileScript outTile))
+            if(coolTile.kind==TK.Snow1|| (coolTile.kind == TK.Snow2))
+            {        
+                if(ObjectDict.Instance.FindObject(TK.Hot,out GameObject HotTile))
                 {
-                    outTile.ObjectDestory();
+                    GameObject newHotTile = MonoBehaviour.Instantiate(HotTile);
+                    TileScript newHotTileScript=newHotTile.GetComponent<TileScript>();
+                    if(area.Put(newHotTileScript, out TileScript outTile))
+                    {
+                        outTile.ObjectDestory();
+                    }
                 }
             }
         }
+
+        
     }
     void TurnHandling()
     {
@@ -145,13 +144,13 @@ public partial class GameLogic//내부처리 로직
             }
         }
 
-        //이동한후
+
         if (order.piece.area.Pick(out PieceScript piece))
         {
             if (order.toArea.Put(piece, out PieceScript outPiece))
             {
-                //이부분은 따로 처리할 것.
-                outPiece.ObjectDestory();
+                MonoBehaviour.print(outPiece.gameObject.name);
+                mapAreas.Delete(outPiece);
             }
             else//이동한 곳에서 맞닿들인 건물,타일,아이템
             {
@@ -172,7 +171,10 @@ public partial class GameLogic//내부처리 로직
                 }
                 if (order.toArea.Get(out TileScript tile))
                 {
-
+                    if(tile.IsPieceDie is true)
+                    {
+                        mapAreas.Delete(piece);
+                    }
                 }
             }
         }

@@ -126,26 +126,6 @@ public class Area : MonoBehaviour
     /// </summary>
     /// <param name="element"></param>
     /// <returns></returns>
-    public bool Pick(out ItemScript element)
-    {
-        if (item is not null)
-        {
-            element = item;
-            item = null;
-            return true;
-        }
-        else
-        {
-            element = null;
-            return false;
-        }
-    }
-    /// <summary>
-    /// 요소가 존재하면 out으로 내보낸뒤 true를 반환하고
-    /// 기존 참조는 지웁니다. 한마디로 뽑습니다.
-    /// </summary>
-    /// <param name="element"></param>
-    /// <returns></returns>
     public bool Pick(out BuildingScript element)
     {
         if (building is not null)
@@ -196,7 +176,9 @@ public class Area : MonoBehaviour
     public bool Put(PieceScript _piece, out PieceScript old)
     {
         _piece.transform.parent = transform;
-        _piece.transform.localPosition = _piece.additionalLocalPositon;
+        //멀리있는 기물의 이미지가 먼저보이도록 z값조정.
+        _piece.transform.localPosition = 
+            new Vector3(_piece.addLocalPosition.x, _piece.addLocalPosition.y,xy.y);
         _piece.area = this;
         if (piece is null)
         {

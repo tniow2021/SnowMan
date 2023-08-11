@@ -19,10 +19,17 @@ public class UIScript : MonoBehaviour
     {
         SceneManager.LoadScene("main");
     }
-
+    public void ³ª°¡±â()
+    {
+    #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+    #else
+            Application.Quit();
+    #endif
+    }
     ////////
 
-    
+
 }
 
 

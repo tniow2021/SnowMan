@@ -7,8 +7,12 @@ public partial class PieceScript : MonoBehaviour //기물정의
     public Area area;
     public PK kind;
     public User user;
-    public Vector2 additionalLocalPositon;
-    
+    public Vector3 addLocalPosition;
+    private void Start()
+    {
+        transform.localScale = ObjectDict.Instance.pieceScale;
+    }
+
     ItemScript item;
     public bool GetItem(out ItemScript _item)
     {
@@ -79,10 +83,7 @@ public partial class PieceScript//오브젝트관련
     {
         Destroy(this.gameObject);
     }
-    public void HardMove(Vector2Int XY)
-    {
-        transform.localPosition = new Vector3(XY.x, XY.y, 0);
-    }
+
 }
 
 

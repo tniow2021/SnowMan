@@ -49,23 +49,7 @@ public partial class TileScript //지형정의 관련
 }
 public partial class TileScript : MonoBehaviour//눈타일관련
 {
-    public bool IsHaveSnow = false;
-    public bool ISChangeHot()
-    {
-        if(kind==TK.Snow)
-        {
-            if(IsHaveSnow is true)
-            {
-                IsHaveSnow = false;
-                return true;
-            }
-        }
-        return false;
-    }
-    //public void ChangeHot()
-    //{
-    //    GetComponent<SpriteRenderer>().sprite = HotTileSprite;
-    //}
+
 
 }
 public partial class TileScript//호수타일관련
@@ -97,7 +81,7 @@ public partial class TileScript //외부에 호출당하는 거 관련
     }
     public void TileCandidate()
     {
-        this.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        this.gameObject.GetComponent<SpriteRenderer>().color = Color.black;
     }
     public void ColorBule()
     {

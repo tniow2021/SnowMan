@@ -140,15 +140,15 @@ public partial class GameScript : MonoBehaviour
             },
             TileSet = new TK[,]
             {
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Lake,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow},
-                {TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow,TK.Snow}
+                {TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1},
+                {TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2},
+                {TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1},
+                {TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2},
+                {TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1},
+                {TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2},
+                {TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1},
+                {TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2},
+                {TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1,TK.Snow2,TK.Snow1}
             },
 
         };
@@ -166,7 +166,8 @@ public enum InputMode
     Pick,
     Put,//이동할장소를  지정
     Route,
-    Disposition//기물선택자.
+    Disposition,//기물선택자.
+    Ended//시합종료
 }
 public partial class GameScript
 {
@@ -180,9 +181,11 @@ public partial class GameScript
     }
     public void DieKingEvent(User user)
     {
+        print("왕죽음");
         WinLossWindow.SetActive(true);
         WinLossWindow.transform.GetChild(0).GetComponent<TMP_Text>().text
-            = user.name + " is Loss";
+            = user.name + "  lost";
+        inputMode = InputMode.Ended;
     }
 
     public CameraScript cameraScript;

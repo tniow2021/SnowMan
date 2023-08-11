@@ -9,6 +9,7 @@ public class ObjectDict : MonoBehaviour
     {
         Instance = this;
     }
+    public Vector3 pieceScale;
     public Area area;
     public List<TileScript> tiles = new List<TileScript>();
 
