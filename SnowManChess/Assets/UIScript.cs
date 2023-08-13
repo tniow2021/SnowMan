@@ -27,6 +27,10 @@ public class UIScript : MonoBehaviour
             Application.Quit();
     #endif
     }
+    public void MultiPlay()
+    {
+
+    }
     ////////
 
 

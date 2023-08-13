@@ -1799,7 +1799,7 @@ MonoBehaviour:
   additionalLocalPositon: {x: 0, y: 0}
   IsHot: 0
   buildAble: 0
-  EnterAble: 1
+  EnterAble: 0
   IsPieceDie: 1
   SnowAmount: 0
   map1: {fileID: 0}
