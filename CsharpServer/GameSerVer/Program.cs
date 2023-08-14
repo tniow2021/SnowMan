@@ -6,11 +6,14 @@ namespace GameServer
 {
     class Program
     {
-        static void Main()
+        static void Mkjkkain()
         {
             SerVer server = new SerVer();
-            server.main();
+            //server.main();
         }
+        //서버 시작
+        //방클래스
+        //방클래스에 스트림 넘겨주기
     }
     public class SerVer
     {
@@ -20,7 +23,7 @@ namespace GameServer
 
         int nbyte;
         byte[] readBuff = new byte[1024];
-        public void main()
+        public void maijn()
         {
             Listner = new TcpListener(IPAddress.Any,7777);
             Listner.Start();

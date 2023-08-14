@@ -1,9 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\gimda\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\gimda\\.nuget\\packages",
-      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      "C:\\Users\\AILAB01\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\AILAB01\\.nuget\\packages"
     ]
   }
 }
